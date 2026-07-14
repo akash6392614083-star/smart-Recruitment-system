@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Smart Recruitment System</title>
+    <!-- Google Fonts (Poppins) & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5, #06b6d4);
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            /* Status / Accent Colors */
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --accent-teal: #0d9488;
+            --success-color: #22c55e;
+            --success-bg: #dcfce7;
+            --danger-color: #ef4444;
+            --danger-bg: #fee2e2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background: var(--primary-gradient);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease, background 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+            flex: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Profile Layout Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Card Elements */
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Sidebar Profile Card */
+        .profile-sidebar-card {
+            text-align: center;
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+            text-transform: uppercase;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-role {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            font-size: 0.95rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .contact-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info-item i {
+            color: #4f46e5;
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        /* Action Buttons */
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-color);
+            border-color: var(--text-muted);
+        }
+
+        /* Academic Cards & Grid */
+        .academic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .academic-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .academic-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .academic-details h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .academic-details p {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Assessment Scores & Progress Bars */
+        .score-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .score-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .score-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .progress-bar-bg {
+            background-color: #e2e8f0;
+            height: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+
+        .fill-aptitude {
+            background-color: var(--accent-purple);
+        }
+
+        .fill-communication {
+            background-color: var(--accent-blue);
+        }
+
+        .fill-skill {
+            background-color: var(--accent-teal);
+        }
+
+        /* Resume Status Section */
+        .resume-status-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px dashed var(--border-color);
+        }
+
+        .resume-status-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .resume-status-left i {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .resume-status-text h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 2rem;
+        }
+
+        .badge-success {
+            background-color: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .badge-danger {
+            background-color: var(--danger-bg);
+            color: var(--danger-color);
+        }
+
+        /* Sticky Footer */
+        footer {
+            background-color: #ffffff;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .navbar-nav {
+                width: 100%;
+                justify-content: space-around;
+                gap: 0.5rem;
+            }
+            .nav-link {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+            .container {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        .form-control{
+            width:100%;
+            padding:10px;
+            margin-top:8px;
+            border:1px solid #d1d5db;
+            border-radius:8px;
+            font-size:15px;
+            font-family:'Poppins',sans-serif;
+        }
+
+        .form-control:focus{
+            outline:none;
+            border-color:#4f46e5;
+            box-shadow:0 0 5px rgba(79,70,229,.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fa-solid fa-laptop-code"></i> SmartRecruit
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="{{ url_for('candidate_dashboard') }}" class="nav-link">Dashboard</a></li>
+            <li><a href="{{ url_for('browse_jobs') }}" class="nav-link">Browse Jobs</a></li>
+            <li><a href="{{ url_for('my_applications') }}" class="nav-link">My Applications</a></li>
+            <li><a href="{{ url_for('my_profile') }}" class="nav-link active">My Profile</a></li>
+            {#<li><a href="{{ url_for('logout') }}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>#}
+        </ul>
+    </nav>
+
+    <!-- Content Container -->
+    <div class="container">
+        
+        <!-- Hero Header -->
+        <div class="hero">
+            <h1>My Profile</h1>
+            <p>Manage your personal information and assessment details.</p>
+        </div>
+
+        <div class="profile-grid">
+            
+            <!-- Sidebar: Avatar & Contact Cards -->
+            <div class="profile-sidebar-card card">
+                <div class="avatar-circle">
+                    {{ profile[0][0] if profile[0] else 'C' }}
+                </div>
+                <h2 class="profile-name">{{ profile[0] }}</h2>
+                <p class="profile-role">Candidate</p>
+                
+                <ul class="contact-info-list">
+                    <li class="contact-info-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>{{ profile[1] }}</span>
+                    </li>
+                    <li class="contact-info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>{{ profile[2] }}</span>
+                    </li>
+                </ul>
+
+                <div class="profile-actions">
+
+            <button type="submit"
+                    form="profileForm"
+                    class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save Changes
+            </button>
+
+            <button class="btn btn-outline">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload Resume
+            </button>
+
+        </div>
+            </div>
+
+            <!-- Main Panel: Stats, Performance & Resume -->
+            <div class="profile-main-content">
+                    <form
+                        id="profileForm"
+                        action="{{ url_for('update_profile') }}"
+                        method="POST">
+                                    
+                <!-- Academic and Work Experience Row -->
+                <div class="card">
+                    <h3 class="card-title"><i class="fa-solid fa-graduation-cap"></i> Academics & Experience</h3>
+                    <div class="academic-grid">
+                        <div class="academic-info-card">
+                            <div class="academic-icon"><i class="fa-solid fa-star"></i></div>
+                            <div class="academic-details">
+                                <h4>CGPA</h4>
+                                <p>{{ profile[3] }}</p>
+                            </div>
+                        </div>
+                    
+                                        <div class="academic-info-card">
+                    <div class="academic-icon" style="background-color:#fef3c7; color:#d97706;">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div class="academic-details">
+                        <h4>Internships</h4>
+
+                        <input
+                            type="number"
+                            name="internship"
+                            value="{{ profile[7] }}"
+                            class="form-control">
+                    </div>
+                </div>
+
+                <div class="academic-info-card">
+                    <div class="academic-icon" style="background-color:#ecfdf5; color:#059669;">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+
+                    <div class="academic-details">
+                        <h4>Projects</h4>
+
+                        <input
+                            type="number"
+                            name="projects"
+                            value="{{ profile[8] }}"
+                            class="form-control">
+                    </div>
+                </div>
+                                    </div>
+                                </div>
+                            </form>                
+
+                <!-- Assessments Card -->
+                <div class="card">
+                    <h3 class="card-title"><i class="fa-solid fa-chart-simple"></i> Assessment Metrics</h3>
+                    
+                    <!-- Aptitude Metric -->
+                    <div class="score-item">
+                        <div class="score-header">
+                            <span class="score-title">Aptitude Score</span>
+                            <span class="score-value">{{ profile[4] }}%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-aptitude" style="width: {{ profile[4] }}%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Metric -->
+                    <div class="score-item" style="margin-top: 1.25rem;">
+                        <div class="score-header">
+                            <span class="score-title">Communication Score</span>
+                            <span class="score-value">{{ profile[5] }}%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-communication" style="width: {{ profile[5] }}%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Metric -->
+                    <div class="score-item" style="margin-top: 1.25rem;">
+                        <div class="score-header">
+                            <span class="score-title">Technical Skill Score</span>
+                            <span class="score-value">{{ profile[6] }}%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-skill" style="width: {{ profile[6] }}%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Attachment Card -->
+                <div class="card">
+                    <h3 class="card-title"><i class="fa-solid fa-file-invoice"></i> Attachment Status</h3>
+                    <div class="resume-status-card">
+                        <div class="resume-status-left">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <div class="resume-status-text">
+                                <h4>Curriculum Vitae (CV)</h4>
+                            </div>
+                        </div>
+                        <div class="resume-status-right">
+                            {% if profile[9] %}
+                                <span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Resume Uploaded</span>
+                            {% else %}
+                                <span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> No Resume Uploaded</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Application Footer -->
+    <footer>
+        © 2026 Smart Recruitment System | AI Powered Recruitment Platform
+    </footer>
+
+</body>
+</html>

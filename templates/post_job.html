@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post New Job | Smart Recruitment System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --primary-blue-light: #eff6ff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --error-red: #ef4444;
+            --success-green: #10b981;
+            --success-green-light: #d1fae5;
+            --success-green-text: #065f46;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.05);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 1. Top Navigation Bar */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .nav-logo i {
+            color: var(--primary-blue);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .recruiter-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-blue-light);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .recruiter-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            color: var(--text-dark);
+            background-color: var(--bg-body);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--error-red);
+            border-radius: 50%;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            color: var(--text-dark);
+            background-color: var(--bg-body);
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            border: none;
+            color: var(--error-red);
+        }
+
+        .btn-logout:hover {
+            background-color: #fef2f2;
+        }
+
+        /* Main Container layout */
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 2.5rem auto;
+            flex-grow: 1;
+        }
+
+        /* 7. Flask Flash Messages Styling */
+        .flash-message {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .flash-message.success, .flash-message.category-success {
+            background-color: var(--success-green-light);
+            color: var(--success-green-text);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flash-message.error, .flash-message.danger, .flash-message.category-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* 2. Centered Card Design */
+        .job-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 2rem 2.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-header h1 i {
+            color: var(--primary-blue);
+        }
+
+        .card-header p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* 3 & 4. Form and Field layouts */
+        .job-form {
+            padding: 2.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Full width for spans across columns */
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group label .required-star {
+            color: var(--error-red);
+            margin-left: 0.15rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background-color: #fff;
+            transition: var(--transition);
+        }
+
+        .input-wrapper .form-control {
+            padding-left: 2.5rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 219, 0.12);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .field-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* 6. Form Field Validation Styles */
+        .form-group.error-state .form-control {
+            border-color: var(--error-red);
+            background-color: #fef2f2;
+        }
+        
+        .form-group.error-state .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+        }
+
+        .error-message {
+            color: var(--error-red);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.25rem;
+            display: none;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* 5. Buttons Styling Layout */
+        .form-actions {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(37, 99, 219, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(37, 99, 219, 0.25);
+        }
+
+        .btn-light {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-light:hover {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-link-back {
+            background-color: transparent;
+            color: var(--text-muted);
+            margin-right: auto;
+            padding-left: 0;
+        }
+
+        .btn-link-back:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Responsive Breakpoints Engine */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .navbar {
+                padding: 0.75rem 1rem;
+            }
+            .recruiter-name {
+                display: none;
+            }
+            .job-form {
+                padding: 1.5rem;
+            }
+            .form-actions {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            .btn-link-back {
+                margin-right: 0;
+                text-align: center;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Navigation Bar -->
+    <nav class="navbar">
+        <a href="/dashboard" class="nav-logo">
+            <i class="fa-solid fa-brain"></i>
+            <span>SmartRecruit</span>
+        </a>
+        <div class="nav-right">
+            <button class="icon-btn" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <div class="notification-badge"></div>
+            </button>
+            <div class="recruiter-profile">
+                <div class="avatar-circle">
+                    {{ recruiter_name|default('JD')|upper }}
+                </div>
+                <span class="recruiter-name">{{ recruiter_name|default('Jane Doe') }}</span>
+            </div>
+            <div class="nav-actions">
+                <a href="/dashboard" class="nav-btn btn-secondary">
+                    <i class="fa-solid fa-table-columns"></i> Dashboard
+                </a>
+                <a href="/logout" class="nav-btn btn-logout">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Form Workspace -->
+    <div class="container">
+        
+        <!-- 7. Flask Flash System Entrypoint Placeholder -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            {% if category == 'success' %}
+                <i class="fa-solid fa-circle-check"></i>
+            {% else %}
+                <i class="fa-solid fa-circle-exclamation"></i>
+            {% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- 2. Centered Card Header Container -->
+        <div class="job-card">
+            <div class="card-header">
+                <h1><i class="fa-solid fa-circle-plus"></i> Post New Job</h1>
+                <p>Fill out the parameters below to open a modern requisition tracking channel evaluated by recruitment AI engines.</p>
+            </div>
+
+            <!-- 3. Flask-Compatible Form Target -->
+            <form action="/post-job" method="POST" class="job-form" id="jobRequisitionForm" novalidate>
+                
+                <!-- Job Title Input Layer -->
+                <div class="form-group">
+                    <label for="job_title">Job Title <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <input type="text" id="job_title" name="job_title" class="form-control" placeholder="e.g. Senior Full-Stack Software Engineer" required>
+                    </div>
+                    <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Job title is required.</div>
+                </div>
+
+                <!-- Job Description Textarea Layer -->
+                <div class="form-group">
+                    <label for="job_description">Job Description <span class="required-star">*</span></label>
+                    <textarea id="job_description" name="job_description" class="form-control" placeholder="Describe the responsibilities, day-to-day operations, and overarching objectives of this position..." required></textarea>
+                    <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Job description is required.</div>
+                </div>
+
+                <!-- Required Skills Tag Accent Input Group -->
+                <div class="form-group">
+                    <label for="required_skill">Required Skills <span class="required-star">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-code"></i>
+                        <input type="text" id="required_skill" name="required_skill" class="form-control" placeholder="e.g. Python, React, PostgreSQL, AWS" required>
+                    </div>
+                    <span class="field-hint">Separate required technical proficiencies using commas.</span>
+                    <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Please define at least one core skill criteria.</div>
+                </div>
+
+                <!-- Technical Metrics Split Grid Row (CGPA & Salary) -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minimum_cgpa">Minimum CGPA Threshold</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <input type="number" id="minimum_cgpa" name="minimum_cgpa" class="form-control" step="0.01" min="0" max="10" placeholder="e.g. 7.5">
+                        </div>
+                        <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> CGPA metric must match a reasonable range (0.0 - 10.0).</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salary">Compensation Package ($ / Year) <span class="required-star">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                            <input type="text" id="salary" name="salary" class="form-control" placeholder="e.g. $120,000 - $140,000" required>
+                        </div>
+                        <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Salary details are required for distribution tracking.</div>
+                    </div>
+                </div>
+
+                <!-- Administrative Split Grid Row (Location & Deadline) -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Job Location <span class="required-star">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" id="location" name="location" class="form-control" placeholder="e.g. New York, NY (Hybrid) or Remote" required>
+                        </div>
+                        <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Work site location criteria must be set.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_date">Last Date to Apply <span class="required-star">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <input type="date" id="last_date" name="last_date" class="form-control" required>
+                        </div>
+                        <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Please select a valid prospective closeout date.</div>
+                    </div>
+                </div>
+
+                <!-- 5. Interactive Operations Footer Actions Bar -->
+                <div class="form-actions">
+                    <a href="/recruiter/dashboard" class="btn btn-link-back">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    <button type="reset" class="btn btn-light" id="resetBtn">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Form
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Publish Job
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Frontend Form Handling Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('jobRequisitionForm');
+            const inputs = form.querySelectorAll('[required]');
+            const cgpaInput = document.getElementById('minimum_cgpa');
+
+            // Set minimum date constraint for deadline picker dynamically (today onwards)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('last_date').setAttribute('min', today);
+
+            // Inline Dynamic Clearances
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    if (input.value.trim() !== "") {
+                        clearError(input);
+                    }
+                });
+                input.addEventListener('blur', () => {
+                    validateInput(input);
+                });
+            });
+
+            if(cgpaInput) {
+                cgpaInput.addEventListener('input', () => {
+                    const val = parseFloat(cgpaInput.value);
+                    if(isNaN(val) || (val >= 0 && val <= 10)) {
+                        clearError(cgpaInput);
+                    } else {
+                        showError(cgpaInput);
+                    }
+                });
+            }
+
+            // Form Submit Verification Pipeline
+            form.addEventListener('submit', (e) => {
+                let isFormValid = true;
+
+                // Validate all standard required inputs
+                inputs.forEach(input => {
+                    if (!validateInput(input)) {
+                        isFormValid = false;
+                    }
+                });
+
+                // Validate explicit CGPA bounds if provided
+                if (cgpaInput && cgpaInput.value) {
+                    const cgpaValue = parseFloat(cgpaInput.value);
+                    if (cgpaValue < 0 || cgpaValue > 10 || isNaN(cgpaValue)) {
+                        showError(cgpaInput);
+                        isFormValid = false;
+                    }
+                }
+
+                if (!isFormValid) {
+                    e.preventDefault(); // Stop submission to server backend pipeline
+                    // Scroll into view of the first failing component
+                    const firstError = form.querySelector('.error-state');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            // Reset Actions Pipeline Handler
+            form.addEventListener('reset', () => {
+                const groupContainers = form.querySelectorAll('.form-group');
+                groupContainers.forEach(group => {
+                    group.classList.remove('error-state');
+                    const errorLabel = group.querySelector('.error-message');
+                    if (errorLabel) errorLabel.style.display = 'none';
+                });
+            });
+
+            function validateInput(input) {
+                if (input.value.trim() === "") {
+                    showError(input);
+                    return false;
+                } else {
+                    clearError(input);
+                    return true;
+                }
+            }
+
+            function showError(input) {
+                const group = input.closest('.form-group');
+                group.classList.add('error-state');
+                const errorLabel = group.querySelector('.error-message');
+                if (errorLabel) errorLabel.style.display = 'flex';
+            }
+
+            function clearError(input) {
+                const group = input.closest('.form-group');
+                group.classList.remove('error-state');
+                const errorLabel = group.querySelector('.error-message');
+                if (errorLabel) errorLabel.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

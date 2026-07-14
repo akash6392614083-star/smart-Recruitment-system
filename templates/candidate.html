@@ -365,15 +365,15 @@ footer{ background:var(--navy); border-top:1px solid var(--line); padding:36px 0
       <h2 class="card-title" id="cardTitle">Create your profile</h2>
       <p class="card-sub" id="cardSub">Takes about two minutes — no fees, ever.</p>
 
-      <!--
-        Flask integration point: render flashed messages / form errors here, e.g.
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% for category, message in messages %}
-            <div class="form-alert {{ category }}">{{ message }}</div>
-          {% endfor %}
-        {% endwith %}
-      -->
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
       <div class="tabs" data-active="register" id="tabs">
         <div class="tab-indicator"></div>
         <button type="button" class="tab-btn register" onclick="setTab('register')">Register</button>
@@ -411,6 +411,19 @@ footer{ background:var(--navy); border-top:1px solid var(--line); padding:36px 0
 
       <!-- Login panel -->
       <div class="panel" data-panel="login">
+        {% with messages=
+          get_flashed_messages(with_categories=true)%}
+          {% if messages%}
+          {% for category,message in messages%}
+          <div
+          style="backgorund:#d4edda;color:3155724;padding
+          :10px;margin-bottom;10px;border-radius;5px;">
+          {{message}}
+        </div>
+        {% endfor%}
+        {%endif%}
+        {%endwith%}
+        
         <form action="/candidate/login" method="POST">
           <div class="field">
             <label for="log-email">Email</label>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Dashboard | Smart Recruitment</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy:#0B1F44;
+    --blue:#2554E8;
+    --blue-light:#4F86F7;
+    --blue-tint:#EAF0FF;
+    --white:#FFFFFF;
+    --bg:#F3F5FA;
+    --gray-900:#0F172A;
+    --gray-600:#5B6478;
+    --gray-400:#8992A6;
+    --border:#E3E7F0;
+
+    --radius-sm:8px;
+    --radius-md:14px;
+    --radius-lg:20px;
+    --shadow-sm:0 1px 2px rgba(11,31,68,0.06);
+    --shadow-md:0 10px 26px rgba(11,31,68,0.10);
+
+    --topbar-h:68px;
+    --sidebar-w:248px;
+    --sidebar-w-collapsed:80px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--gray-900);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.brand-name,.nav-link span,.btn,.section-title{font-family:'Sora',sans-serif;}
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;margin:0;padding:0;}
+  button{font:inherit;cursor:pointer;}
+  :focus-visible{outline:3px solid var(--blue-light);outline-offset:2px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important;transition-duration:0.001ms !important;}
+  }
+
+  .app{min-height:100vh;}
+
+  /* ---- Top Navigation Bar (gradient header) ---- */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+    background:linear-gradient(120deg,var(--navy) 0%,#123168 55%,var(--blue) 130%);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 24px 0 20px;
+    z-index:100;
+    box-shadow:0 2px 12px rgba(11,31,68,0.22);
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,var(--white),#D9E4FF);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--navy);font-weight:800;font-size:14px;letter-spacing:0.5px;
+    flex-shrink:0;
+  }
+  .brand-name{color:var(--white);font-size:17px;font-weight:700;letter-spacing:0.2px;white-space:nowrap;}
+  .brand-name small{display:block;font-family:'Inter',sans-serif;font-weight:400;font-size:11px;color:#C4D4F7;letter-spacing:0.4px;}
+
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .candidate-chip{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,0.10);}
+  .candidate-chip .name{color:var(--white);font-size:14px;font-weight:600;white-space:nowrap;}
+  .candidate-chip .name em{display:block;font-style:normal;font-weight:400;font-size:11px;color:#C4D4F7;}
+
+  .icon-btn{
+    position:relative;width:38px;height:38px;border-radius:50%;
+    background:rgba(255,255,255,0.10);border:none;color:var(--white);
+    display:flex;align-items:center;justify-content:center;font-size:15px;
+    transition:background .15s ease;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,0.20);}
+  .icon-btn .dot{
+    position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;
+    background:#FFC857;border:2px solid var(--navy);
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 18px;border-radius:10px;border:none;
+    font-size:13.5px;font-weight:600;letter-spacing:0.2px;
+    transition:transform .12s ease, box-shadow .12s ease, background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-logout-top{background:rgba(255,255,255,0.12);color:var(--white);}
+  .btn-logout-top:hover{background:rgba(255,255,255,0.22);}
+  .btn-primary{background:var(--blue);color:var(--white);box-shadow:0 6px 16px rgba(37,84,232,0.28);}
+  .btn-primary:hover{background:var(--blue-light);transform:translateY(-1px);}
+  .btn-outline{background:var(--white);color:var(--navy);border:1.5px solid var(--border);}
+  .btn-outline:hover{border-color:var(--blue-light);color:var(--blue);}
+  .btn-sm{padding:7px 14px;font-size:12.5px;border-radius:8px;}
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);
+    background:var(--white);border-right:1px solid var(--border);
+    padding:22px 14px;display:flex;flex-direction:column;justify-content:space-between;
+    z-index:90;
+  }
+  .nav-group-label{
+    font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:1px;
+    padding:0 12px 10px;font-weight:600;
+  }
+  .nav-link{
+    display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:10px;
+    color:var(--gray-600);font-size:14px;font-weight:600;margin-bottom:4px;
+    position:relative;transition:background .15s ease,color .15s ease;
+  }
+  .nav-link i{width:20px;text-align:center;font-size:15px;color:var(--gray-400);transition:color .15s ease;}
+  .nav-link:hover{background:var(--blue-tint);color:var(--blue);}
+  .nav-link:hover i{color:var(--blue);}
+  .nav-link.active{background:var(--blue-tint);color:var(--blue);}
+  .nav-link.active i{color:var(--blue);}
+  .nav-link.active::before{
+    content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;
+    background:var(--blue);
+  }
+  .nav-link .label{white-space:nowrap;}
+  .sidebar-bottom{border-top:1px solid var(--border);padding-top:14px;}
+
+  /* ---- Main content ---- */
+  .main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);min-height:100vh;display:flex;flex-direction:column;}
+  .main-inner{padding:28px 32px 10px;max-width:1280px;flex:1;width:100%;}
+
+  /* ---- Flash messages ---- */
+  .flash-stack{margin-bottom:20px;display:flex;flex-direction:column;gap:10px;}
+  .flash-message{
+    padding:13px 16px;border-radius:10px;font-size:13.5px;font-weight:600;
+    background:var(--blue-tint);color:var(--navy);border:1px solid #CFDDFB;
+    display:flex;align-items:center;gap:10px;
+  }
+  .flash-message.error{background:#FDEAEA;color:#7A1F1F;border-color:#F3C6C6;}
+  .flash-message.success{background:var(--blue-tint);color:var(--navy);border-color:#CFDDFB;}
+
+  /* ---- Welcome hero (gradient banner) ---- */
+  .hero{
+    background:linear-gradient(120deg,var(--navy) 0%,var(--blue) 100%);
+    border-radius:var(--radius-lg);
+    padding:30px 32px;
+    margin-bottom:26px;
+    color:var(--white);
+    box-shadow:var(--shadow-md);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,0.12),transparent 70%);
+  }
+  .hero h1{margin:0 0 8px;font-size:24px;font-weight:700;position:relative;}
+  .hero p{margin:0;font-size:14px;color:#D6E2FA;position:relative;max-width:520px;}
+
+  /* ---- Dashboard overview cards ---- */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:26px;}
+  .stat-card{
+    background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:20px;display:flex;flex-direction:column;gap:14px;
+    box-shadow:var(--shadow-sm);transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px);}
+  .stat-icon{
+    width:44px;height:44px;border-radius:12px;background:var(--blue-tint);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;font-size:17px;
+  }
+  .stat-value{font-family:'Sora',sans-serif;font-size:28px;font-weight:700;color:var(--navy);line-height:1;}
+  .stat-label{font-size:13px;color:var(--gray-600);font-weight:500;}
+
+  .ring-card{flex-direction:row;align-items:center;justify-content:flex-start;}
+  .ring{
+    width:60px;height:60px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(var(--blue) 0% 72%, var(--border) 72% 100%);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ring-inner{
+    width:46px;height:46px;border-radius:50%;background:var(--white);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--navy);
+  }
+
+  /* ---- Quick actions ---- */
+  .quick-actions{display:flex;gap:14px;margin-bottom:30px;flex-wrap:wrap;}
+  .quick-action{
+    flex:1;min-width:220px;
+    display:flex;align-items:center;gap:14px;
+    background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);
+    padding:18px 20px;transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+  }
+  .quick-action:hover{border-color:var(--blue-light);box-shadow:var(--shadow-md);transform:translateY(-3px);}
+  .quick-action .qa-icon{
+    width:42px;height:42px;border-radius:10px;
+    background:linear-gradient(135deg,var(--navy),var(--blue));color:var(--white);
+    display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+  }
+  .quick-action .qa-text strong{display:block;font-size:14.5px;color:var(--navy);font-family:'Sora',sans-serif;}
+  .quick-action .qa-text span{font-size:12px;color:var(--gray-600);}
+
+  /* ---- Panels (tables / cards) ---- */
+  .panel{
+    background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);
+    margin-bottom:26px;overflow:hidden;box-shadow:var(--shadow-sm);
+  }
+  .panel-head{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    padding:20px 22px;border-bottom:1px solid var(--border);
+  }
+  .panel-head h2{margin:0;font-size:16px;color:var(--navy);font-weight:700;display:flex;align-items:center;gap:10px;}
+  .panel-head h2 i{color:var(--blue);font-size:14px;}
+  .panel-head .panel-sub{font-size:12.5px;color:var(--gray-600);font-weight:500;margin-top:2px;}
+
+  .table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;min-width:820px;}
+  thead th{
+    text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:0.6px;
+    color:var(--gray-600);font-weight:700;background:var(--bg);
+    padding:13px 22px;border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  thead th:last-child{text-align:right;}
+  tbody td{padding:15px 22px;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--gray-900);}
+  tbody tr:last-child td{border-bottom:none;}
+
+  /* ---- Profile summary card ---- */
+  .profile-layout{display:grid;grid-template-columns:240px 1fr;}
+  .profile-side{
+    background:linear-gradient(160deg,var(--navy),#173a72);
+    padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;
+  }
+  .photo-placeholder{
+    position:relative;width:92px;height:92px;border-radius:50%;
+    background:rgba(255,255,255,0.12);border:2px dashed rgba(255,255,255,0.35);
+    display:flex;align-items:center;justify-content:center;color:#C4D4F7;font-size:26px;
+  }
+  .photo-placeholder .cam-badge{
+    position:absolute;bottom:-2px;right:-2px;width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:var(--white);display:flex;align-items:center;justify-content:center;
+    font-size:12px;border:2px solid var(--navy);
+  }
+  .profile-side h3{margin:0;color:var(--white);font-size:16px;}
+  .profile-side span{color:#C4D4F7;font-size:12.5px;}
+
+  .profile-details{padding:26px 28px;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-bottom:24px;}
+  .detail-item label{
+    display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.6px;
+    color:var(--gray-400);font-weight:700;margin-bottom:6px;
+  }
+  .detail-item p{margin:0;font-size:14.5px;color:var(--navy);font-weight:600;font-family:'IBM Plex Mono',monospace;}
+
+  .section-label{
+    font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);
+    font-weight:700;margin:0 0 12px;
+  }
+  .score-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;}
+  .score-item label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--gray-600);font-weight:600;margin-bottom:8px;}
+  .score-item label span{color:var(--navy);font-family:'IBM Plex Mono',monospace;}
+  .score-bar{height:8px;border-radius:4px;background:var(--border);overflow:hidden;}
+  .score-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--blue-light));}
+
+  .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .meta-card{
+    background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:14px 16px;
+  }
+  .meta-card label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);font-weight:700;margin-bottom:6px;}
+  .meta-card p{margin:0;font-size:14px;color:var(--navy);font-weight:600;}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+    background:var(--blue-tint);color:var(--blue);font-size:12.5px;font-weight:700;
+  }
+
+  /* ---- Recent Activity (empty content) ---- */
+  .activity-body{min-height:120px;padding:22px;}
+
+  /* ---- Footer ---- */
+  .footer{
+    text-align:center;padding:22px 20px;color:var(--gray-400);font-size:12.5px;
+    border-top:1px solid var(--border);background:var(--white);
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width:1180px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .score-grid{grid-template-columns:1fr 1fr;}
+    .meta-grid{grid-template-columns:1fr 1fr;}
+  }
+
+  @media (max-width:1024px){
+    :root{--sidebar-w:var(--sidebar-w-collapsed);}
+    .nav-link .label,.nav-group-label{display:none;}
+    .nav-link{justify-content:center;padding:12px 0;}
+    .nav-link.active::before{left:0;}
+    .profile-layout{grid-template-columns:1fr;}
+    .profile-side{flex-direction:row;justify-content:flex-start;text-align:left;padding:22px 24px;}
+  }
+
+  @media (max-width:760px){
+    .candidate-chip .name{display:none;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .quick-actions{flex-direction:column;}
+    .main-inner{padding:22px 16px 10px;}
+    .score-grid{grid-template-columns:1fr;}
+    .meta-grid{grid-template-columns:1fr;}
+
+    .sidebar{
+      top:auto;bottom:0;left:0;right:0;width:100%;height:64px;
+      flex-direction:row;padding:0 6px;border-right:none;border-top:1px solid var(--border);
+      align-items:center;
+    }
+    .sidebar-top,.sidebar-bottom{display:flex;flex-direction:row;flex:1;justify-content:space-around;border-top:none;padding-top:0;}
+    .nav-link{margin-bottom:0;padding:10px;}
+    .nav-link.active::before{left:50%;top:auto;bottom:0;transform:translateX(-50%);width:24px;height:3px;border-radius:3px 3px 0 0;}
+    .main{margin-left:0;padding-bottom:64px;}
+    .detail-grid{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:480px){
+    .stats-grid{grid-template-columns:1fr;}
+    .topbar{padding:0 14px;}
+    .brand-name small{display:none;}
+    .hero{padding:24px 20px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">SR</div>
+      <div class="brand-name">Smart Recruitment<small>Candidate Portal</small></div>
+    </div>
+    <div class="topbar-right">
+      <div class="candidate-chip">
+        <div class="name">Akash Sharma<em>Candidate</em></div>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Notifications">
+        <i class="fa-regular fa-bell"></i>
+        <span class="dot"></span>
+      </button>
+      <button class="icon-btn" type="button" aria-label="Profile">
+        <i class="fa-regular fa-circle-user"></i>
+      </button>
+      <a href="#" class="btn btn-logout-top">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </a>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="nav-group-label">Menu</div>
+      <ul>
+        <li><a href="#dashboard" class="nav-link active"><i class="fa-solid fa-house"></i><span class="label">Dashboard</span></a></li>
+        <li><a href="{{ url_for('browse_jobs') }}" class="nav-link"><i class="fa-solid fa-briefcase"></i><span class="label">Browse Jobs</span></a></li>
+        <li><a href="{{ url_for('my_applications') }}" class="nav-link"><i class="fa-solid fa-file-lines"></i><span class="label">My Applications</span></a></li>
+        <li><a href="{{ url_for('my_profile') }}" class="nav-link"><i class="fa-solid fa-user"></i><span class="label">My Profile</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-bottom">
+      <ul>
+        <li><a href="#" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span class="label">Logout</span></a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main" id="dashboard">
+    <div class="main-inner">
+
+      <div class="flash-stack">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-message {{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <section class="hero">
+        <h1>Welcome back, Candidate!</h1>
+        <p>Find your dream job and track your applications from one place.</p>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+          <div>
+            <div class="stat-value">128</div>
+            <div class="stat-label">Available Jobs</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <div>
+            <div class="stat-value">16</div>
+            <div class="stat-label">Applied Jobs</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+          <div>
+            <div class="stat-value">4</div>
+            <div class="stat-label">Shortlisted Jobs</div>
+          </div>
+        </div>
+
+        <div class="stat-card ring-card">
+          <div class="ring"><div class="ring-inner">72%</div></div>
+          <div>
+            <div class="stat-value" style="font-size:16px;">Good</div>
+            <div class="stat-label">Profile Completion</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-actions">
+        <a href="{{ url_for('browse_jobs') }}" class="quick-action">
+          <div class="qa-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <div class="qa-text"><strong>Browse Jobs</strong><span>Explore open roles</span></div>
+        </a>
+        <a href="{{ url_for('my_applications') }}" class="quick-action">
+          <div class="qa-icon"><i class="fa-solid fa-list-check"></i></div>
+          <div class="qa-text"><strong>My Applications</strong><span>Track your status</span></div>
+        </a>
+        <<a href="{{ url_for('my_profile') }}" class="quick-action">
+          <div class="qa-icon"><i class="fa-solid fa-user-pen"></i></div>
+          <div class="qa-text"><strong>Update Profile</strong><span>Keep details current</span></div>
+        </a>
+      </section>
+
+      <section class="panel" id="available-jobs">
+        <div class="panel-head">
+          <div>
+            <h2><i class="fa-solid fa-briefcase"></i>Available Jobs</h2>
+            <div class="panel-sub">Openings matched to your profile</div>
+          </div>
+          <a href="#" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Required Skills</th>
+                <th>Minimum CGPA</th>
+                <th>Salary</th>
+                <th>Last Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+
+    {% for job in jobs %}
+
+    <tr>
+        <td>{{ job[1] }}</td>
+        <td>Company</td>
+        <td>{{ job[2] }}</td>
+        <td>{{ job[4] }}</td>
+        <td>{{ job[5] }}</td>
+        <td>₹{{ job[3] }}</td>
+        <td>{{ job[6] }}</td>
+        <td>
+            <a href="{{ url_for('apply_job', job_id=job[0]) }}" class="btn btn-primary btn-sm">
+                Apply
+            </a>
+        </td>
+    </tr>
+
+    {% endfor %}
+    </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="my-applications">
+        <div class="panel-head">
+          <div>
+            <h2><i class="fa-solid fa-file-lines"></i>My Applications</h2>
+            <div class="panel-sub">Status of jobs you've applied to</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Applied Date</th>
+                <th>Application Status</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="profile">
+        <div class="panel-head">
+          <h2><i class="fa-solid fa-user"></i>Profile Summary</h2>
+          <a href="#" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen"></i> Edit Profile</a>
+        </div>
+        <div class="profile-layout">
+          <div class="profile-side">
+            <div class="photo-placeholder">
+              <i class="fa-solid fa-user"></i>
+              <div class="cam-badge"><i class="fa-solid fa-camera"></i></div>
+            </div>
+            <div>
+              <h3>Akash Sharma</h3>
+              <span>Candidate</span>
+            </div>
+          </div>
+
+          <div class="profile-details">
+            <div class="detail-grid">
+              <div class="detail-item"><label>Full Name</label><p>Akash Sharma</p></div>
+              <div class="detail-item"><label>Email Address</label><p>akash.sharma@example.com</p></div>
+              <div class="detail-item"><label>Phone Number</label><p>+91 98765 43210</p></div>
+              <div class="detail-item"><label>CGPA</label><p>8.7 / 10</p></div>
+            </div>
+
+            <p class="section-label">Assessment Scores</p>
+            <div class="score-grid">
+              <div class="score-item">
+                <label>Aptitude Score <span>78%</span></label>
+                <div class="score-bar"><div class="score-bar-fill" style="width:78%"></div></div>
+              </div>
+              <div class="score-item">
+                <label>Communication Score <span>85%</span></label>
+                <div class="score-bar"><div class="score-bar-fill" style="width:85%"></div></div>
+              </div>
+              <div class="score-item">
+                <label>Skill Score <span>81%</span></label>
+                <div class="score-bar"><div class="score-bar-fill" style="width:81%"></div></div>
+              </div>
+            </div>
+
+            <p class="section-label">Experience</p>
+            <div class="meta-grid">
+              <div class="meta-card"><label>Projects</label><p>6 Completed</p></div>
+              <div class="meta-card"><label>Internships</label><p>2 Completed</p></div>
+              <div class="meta-card">
+                <label>Resume Status</label>
+                <p><span class="badge"><i class="fa-solid fa-circle-check"></i> Uploaded</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="recent-activity">
+        <div class="panel-head">
+          <h2><i class="fa-solid fa-clock-rotate-left"></i>Recent Activity</h2>
+        </div>
+        <div class="activity-body"></div>
+      </section>
+
+    </div>
+
+    <footer class="footer">
+      Smart Recruitment System &copy; 2026
+    </footer>
+  </main>
+
+</div>
+</body>
+</html>
