@@ -1,5 +1,8 @@
 from flask import Flask, render_template,request,redirect,url_for,flash,session
 import mysql.connector
+import pickle
+
+model = pickle.load(open("model.pkl", "rb"))
 
 
 app = Flask(__name__)
@@ -127,7 +130,7 @@ def recruiter_login():
         session["user_id"] = user[0]
         session["role"] = "Recruiter"
 
-        flash("Login Successful!", "success")
+        # flash("Login Successful!", "success")
         return redirect(url_for("recruiter_dashboard"))
 
     else:
@@ -252,6 +255,47 @@ def update_profile():
     flash("Profile Updated Successfully!", "success")
 
     return redirect(url_for("my_profile"))
+
+@app.route("/create-profile", methods=["GET","POST"])
+def create_profile():
+
+    if "user_id" not in session:
+        return redirect(url_for("candidate"))
+
+    if request.method == "POST":
+
+        user_id = session["user_id"]
+
+        cursor.execute("""
+        INSERT INTO candidate
+        (
+            user_id,
+            cgpa,
+            aptitude_score,
+            communication_score,
+            skill,
+            internship,
+            projects
+            
+        )
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
+        """,
+        (
+            user_id,
+            request.form["cgpa"],
+            request.form["aptitude_score"],
+            request.form["communication_score"],
+            request.form["skill"],
+            request.form["internship"],
+            request.form["projects"]
+            
+        ))
+
+        db.commit()
+
+        return redirect(url_for("my_profile"))
+
+    return render_template("create_profile.html")
     
     
     
@@ -341,6 +385,7 @@ def apply_job(job_id):
         return redirect(url_for("candidate"))
 
     user_id = session["user_id"]
+    print("Logged in user:", user_id)
 
     cursor.execute("""
         SELECT candidate_id
@@ -452,6 +497,83 @@ def view_applicants(job_id):
         applicants=applicants,
         job_id=job_id
     )
+@app.route("/ai-shortlisting")
+def ai_shortlisting():
+
+    print("AI Shortlisting route called")
+
+    if "user_id" not in session:
+        return redirect(url_for("recruiter"))
+
+    user_id = session["user_id"]
+
+    cursor.execute("""
+    SELECT recruiter_id
+    FROM recruiters
+    WHERE user_id=%s
+    """, (user_id,))
+
+    recruiter = cursor.fetchone()
+
+    if recruiter is None:
+        flash("Recruiter not found!")
+        return redirect(url_for("recruiter_dashboard"))
+
+    recruiter_id = recruiter[0]
+
+    cursor.execute("""
+        SELECT
+            application.application_id,
+            candidate.cgpa,
+            candidate.aptitude_score,
+            candidate.communication_score,
+            candidate.skill,
+            candidate.internship,
+            candidate.projects
+        FROM application
+        INNER JOIN candidate
+            ON application.candidate_id = candidate.candidate_id
+        INNER JOIN jobs
+            ON application.job_id = jobs.job_id
+        WHERE jobs.recruiter_id = %s
+    """, (recruiter_id,))
+
+    applicants = cursor.fetchall()
+    print(applicants)
+
+    print(applicants)   # Debugging
+
+    for applicant in applicants:
+
+        application_id = applicant[0]
+
+        features = [[
+            float(applicant[1]),   # CGPA
+            int(applicant[2]),     # Aptitude
+            int(applicant[3]),     # Communication
+            int(applicant[4]),     # Skill
+            int(applicant[5]),     # Internship
+            int(applicant[6])      # Projects
+        ]]
+
+        prediction = model.predict(features)[0]
+
+        if prediction == 1:
+            result = "Shortlisted"
+        else:
+            result = "Not Shortlisted"
+
+        cursor.execute("""
+            UPDATE application
+            SET prediction = %s
+            WHERE application_id = %s
+        """, (result, application_id))
+
+    db.commit()
+
+    # flash("AI Shortlisting completed successfully!")
+
+    return redirect(url_for("my_jobs"))
 
 
 

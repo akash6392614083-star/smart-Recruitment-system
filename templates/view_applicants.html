@@ -184,23 +184,26 @@
                         </td>
 
                         <td>
+                        {% if applicant[11] == "Shortlisted" %}
 
-                        {% if applicant[11] %}
+                            <span class="badge status-shortlisted">
+                                {{ applicant[11] }}
+                            </span>
 
-                        <span class="badge status-shortlisted">
-                        {{ applicant[11] }}
-                        </span>
+                        {% elif applicant[11] == "Not Shortlisted" %}
+
+                            <span class="badge status-rejected">
+                                {{ applicant[11] }}
+                            </span>
 
                         {% else %}
 
-                        <span class="badge status-pending">
-                        Pending
-                        </span>
+                            <span class="badge status-pending">
+                                Pending
+                            </span>
 
                         {% endif %}
-
-                        </td>
-
+                    </td>
                         <td>
 
                         <span class="badge status-pending">
