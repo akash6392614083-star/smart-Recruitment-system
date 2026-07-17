@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Smart Recruitment System</title>
     <!-- Google Fonts (Poppins) & Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #4f46e5, #06b6d4);
-            --bg-color: #f8fafc;
+            /* Palette: deep navy + teal + gold/wine accents */
+            --primary-gradient: linear-gradient(135deg, #0b2545, #10847e);
+            --bg-color: #f2f6f8;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            
+            --text-main: #14213d;
+            --text-muted: #5c6b80;
+            --border-color: #e3e9f0;
+
             /* Status / Accent Colors */
-            --accent-purple: #8b5cf6;
-            --accent-blue: #3b82f6;
-            --accent-teal: #0d9488;
-            --success-color: #22c55e;
+            --accent-gold: #e3a438;
+            --accent-teal: #10847e;
+            --accent-wine: #8c2f3b;
+            --success-color: #16a34a;
             --success-bg: #dcfce7;
-            --danger-color: #ef4444;
+            --danger-color: #dc2626;
             --danger-bg: #fee2e2;
         }
 
@@ -34,6 +35,10 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -42,9 +47,63 @@
             flex-direction: column;
         }
 
+        /* ---------- Keyframe Animations ---------- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-18px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes avatarPulse {
+            0%   { box-shadow: 0 10px 15px -3px rgba(16, 132, 126, 0.35), 0 0 0 0 rgba(16, 132, 126, 0.35); }
+            70%  { box-shadow: 0 10px 15px -3px rgba(16, 132, 126, 0.35), 0 0 0 12px rgba(16, 132, 126, 0); }
+            100% { box-shadow: 0 10px 15px -3px rgba(16, 132, 126, 0.35), 0 0 0 0 rgba(16, 132, 126, 0); }
+        }
+
+        @keyframes growBar {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.05); }
+        }
+
+        @keyframes badgeAlert {
+            0%, 100% { transform: rotate(0deg); }
+            25%      { transform: rotate(-2deg); }
+            75%      { transform: rotate(2deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+
         /* Navbar Styling */
         .navbar {
             background: var(--primary-gradient);
+            background-size: 200% 200%;
+            animation: gradientShift 10s ease infinite;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -69,18 +128,38 @@
         }
 
         .nav-link {
+            position: relative;
             color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
             font-size: 0.95rem;
             font-weight: 500;
-            transition: color 0.3s ease, background 0.3s ease;
+            transition: color 0.3s ease, background 0.3s ease, transform 0.2s ease;
             padding: 0.5rem 0.75rem;
             border-radius: 0.375rem;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0.75rem;
+            right: 0.75rem;
+            bottom: 0.15rem;
+            height: 2px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
 
         .nav-link:hover, .nav-link.active {
             color: #ffffff;
             background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            transform: scaleX(1);
         }
 
         /* Container Layout */
@@ -95,6 +174,7 @@
         /* Hero Section */
         .hero {
             margin-bottom: 2.5rem;
+            animation: fadeInDown 0.6s ease both;
         }
 
         .hero h1 {
@@ -102,6 +182,10 @@
             font-weight: 700;
             color: var(--text-main);
             margin-bottom: 0.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
@@ -125,6 +209,15 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             padding: 2rem;
             margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease both;
+            animation-delay: 0.15s;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 22px -6px rgba(11, 37, 69, 0.15), 0 4px 8px -2px rgba(11, 37, 69, 0.06);
+            border-color: rgba(16, 132, 126, 0.35);
         }
 
         .card-title {
@@ -139,9 +232,14 @@
             padding-bottom: 0.75rem;
         }
 
+        .card-title i {
+            color: var(--accent-teal);
+        }
+
         /* Sidebar Profile Card */
         .profile-sidebar-card {
             text-align: center;
+            animation: fadeInLeft 0.6s ease both;
         }
 
         .avatar-circle {
@@ -156,8 +254,9 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem auto;
-            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(16, 132, 126, 0.35);
             text-transform: uppercase;
+            animation: avatarPulse 2.5s ease-out infinite;
         }
 
         .profile-name {
@@ -169,8 +268,8 @@
 
         .profile-role {
             font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
+            color: var(--accent-teal);
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 1.5rem;
@@ -186,9 +285,16 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem 0;
+            padding: 0.75rem 0.5rem;
             font-size: 0.95rem;
             border-bottom: 1px dashed var(--border-color);
+            border-radius: 0.375rem;
+            transition: background-color 0.25s ease, transform 0.25s ease, padding-left 0.25s ease;
+        }
+
+        .contact-info-item:hover {
+            background-color: rgba(16, 132, 126, 0.08);
+            transform: translateX(4px);
         }
 
         .contact-info-item:last-child {
@@ -196,7 +302,7 @@
         }
 
         .contact-info-item i {
-            color: #4f46e5;
+            color: var(--accent-teal);
             width: 1.25rem;
             text-align: center;
         }
@@ -209,6 +315,8 @@
         }
 
         .btn {
+            position: relative;
+            overflow: hidden;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -219,20 +327,37 @@
             font-size: 0.95rem;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             width: 100%;
             border: none;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 130%;
         }
 
         .btn-primary {
             background: var(--primary-gradient);
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(11, 37, 69, 0.25);
         }
 
         .btn-primary:hover {
             opacity: 0.95;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 14px -3px rgba(11, 37, 69, 0.3);
         }
 
         .btn-outline {
@@ -243,7 +368,9 @@
 
         .btn-outline:hover {
             background-color: var(--bg-color);
-            border-color: var(--text-muted);
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+            transform: translateY(-2px);
         }
 
         /* Academic Cards & Grid */
@@ -261,6 +388,13 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .academic-info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 14px -4px rgba(11, 37, 69, 0.12);
+            border-color: rgba(16, 132, 126, 0.4);
         }
 
         .academic-icon {
@@ -271,8 +405,13 @@
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
-            background-color: #e0e7ff;
-            color: #4f46e5;
+            background-color: #fbedd0;
+            color: var(--accent-gold);
+            transition: transform 0.3s ease;
+        }
+
+        .academic-info-card:hover .academic-icon {
+            transform: scale(1.08) rotate(-4deg);
         }
 
         .academic-details h4 {
@@ -313,7 +452,7 @@
         .score-value {
             font-size: 0.95rem;
             font-weight: 600;
-            color: #4f46e5;
+            color: var(--accent-teal);
         }
 
         .progress-bar-bg {
@@ -328,18 +467,23 @@
             height: 100%;
             border-radius: 10px;
             transition: width 1s ease-out;
+            transform-origin: left;
+            animation: growBar 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
         .fill-aptitude {
-            background-color: var(--accent-purple);
+            background-color: var(--accent-gold);
+            animation-delay: 0.2s;
         }
 
         .fill-communication {
-            background-color: var(--accent-blue);
+            background-color: var(--accent-teal);
+            animation-delay: 0.4s;
         }
 
         .fill-skill {
-            background-color: var(--accent-teal);
+            background-color: var(--accent-wine);
+            animation-delay: 0.6s;
         }
 
         /* Resume Status Section */
@@ -351,6 +495,12 @@
             background-color: #f8fafc;
             border-radius: 0.75rem;
             border: 1px dashed var(--border-color);
+            transition: border-color 0.25s ease, background-color 0.25s ease;
+        }
+
+        .resume-status-card:hover {
+            border-color: var(--accent-teal);
+            background-color: rgba(16, 132, 126, 0.05);
         }
 
         .resume-status-left {
@@ -382,11 +532,13 @@
         .badge-success {
             background-color: var(--success-bg);
             color: var(--success-color);
+            animation: badgePulse 2.2s ease-in-out infinite;
         }
 
         .badge-danger {
             background-color: var(--danger-bg);
             color: var(--danger-color);
+            animation: badgeAlert 1.8s ease-in-out infinite;
         }
 
         /* Sticky Footer */
@@ -435,12 +587,13 @@
             border-radius:8px;
             font-size:15px;
             font-family:'Poppins',sans-serif;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
         .form-control:focus{
             outline:none;
-            border-color:#4f46e5;
-            box-shadow:0 0 5px rgba(79,70,229,.25);
+            border-color: var(--accent-teal);
+            box-shadow:0 0 5px rgba(16,132,126,.3);
         }
     </style>
 </head>
@@ -456,7 +609,6 @@
             <li><a href="{{ url_for('browse_jobs') }}" class="nav-link">Browse Jobs</a></li>
             <li><a href="{{ url_for('my_applications') }}" class="nav-link">My Applications</a></li>
             <li><a href="{{ url_for('my_profile') }}" class="nav-link active">My Profile</a></li>
-            {#<li><a href="{{ url_for('logout') }}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>#}
         </ul>
     </nav>
 
@@ -491,75 +643,59 @@
                 </ul>
 
                 <div class="profile-actions">
-
-            <button type="submit"
-                    form="profileForm"
-                    class="btn btn-primary">
-                <i class="fa-solid fa-floppy-disk"></i>
-                Save Changes
-            </button>
-
-            <button class="btn btn-outline">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                Upload Resume
-            </button>
-
-        </div>
+                    <button type="submit" form="profileForm" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-outline">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Resume
+                    </button>
+                </div>
             </div>
 
             <!-- Main Panel: Stats, Performance & Resume -->
             <div class="profile-main-content">
-                    <form
-                        id="profileForm"
-                        action="{{ url_for('update_profile') }}"
-                        method="POST">
-                                    
-                <!-- Academic and Work Experience Row -->
-                <div class="card">
-                    <h3 class="card-title"><i class="fa-solid fa-graduation-cap"></i> Academics & Experience</h3>
-                    <div class="academic-grid">
-                        <div class="academic-info-card">
-                            <div class="academic-icon"><i class="fa-solid fa-star"></i></div>
-                            <div class="academic-details">
-                                <h4>CGPA</h4>
-                                <p>{{ profile[3] }}</p>
-                            </div>
-                        </div>
-                    
-                                        <div class="academic-info-card">
-                    <div class="academic-icon" style="background-color:#fef3c7; color:#d97706;">
-                        <i class="fa-solid fa-briefcase"></i>
-                    </div>
-
-                    <div class="academic-details">
-                        <h4>Internships</h4>
-
-                        <input
-                            type="number"
-                            name="internship"
-                            value="{{ profile[7] }}"
-                            class="form-control">
-                    </div>
-                </div>
-
-                <div class="academic-info-card">
-                    <div class="academic-icon" style="background-color:#ecfdf5; color:#059669;">
-                        <i class="fa-solid fa-diagram-project"></i>
-                    </div>
-
-                    <div class="academic-details">
-                        <h4>Projects</h4>
-
-                        <input
-                            type="number"
-                            name="projects"
-                            value="{{ profile[8] }}"
-                            class="form-control">
-                    </div>
-                </div>
-                                    </div>
+                
+                <!-- Form wrapper properly aligned -->
+                <form id="profileForm" action="{{ url_for('update_profile') }}" method="POST">
+                    <!-- Academic and Work Experience Row -->
+                    <div class="card">
+                        <h3 class="card-title"><i class="fa-solid fa-graduation-cap"></i> Academics & Experience</h3>
+                        <div class="academic-grid">
+                            
+                            <!-- CGPA -->
+                            <div class="academic-info-card">
+                                <div class="academic-icon"><i class="fa-solid fa-star"></i></div>
+                                <div class="academic-details">
+                                    <h4>CGPA</h4>
+                                    <p>{{ profile[3] }}</p>
                                 </div>
-                            </form>                
+                            </div>
+                        
+                            <!-- Internships -->
+                            <div class="academic-info-card">
+                                <div class="academic-icon" style="background-color:#d9f2ef; color:#10847e;">
+                                    <i class="fa-solid fa-briefcase"></i>
+                                </div>
+                                <div class="academic-details">
+                                    <h4>Internships</h4>
+                                    <input type="number" name="internship" value="{{ profile[7] }}" class="form-control" min="0">
+                                </div>
+                            </div>
+
+                            <!-- Projects -->
+                            <div class="academic-info-card">
+                                <div class="academic-icon" style="background-color:#f5e1e3; color:#8c2f3b;">
+                                    <i class="fa-solid fa-diagram-project"></i>
+                                </div>
+                                <div class="academic-details">
+                                    <h4>Projects</h4>
+                                    <input type="number" name="projects" value="{{ profile[8] }}" class="form-control" min="0">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </form>                
 
                 <!-- Assessments Card -->
                 <div class="card">

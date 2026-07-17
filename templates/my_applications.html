@@ -4,86 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Applications - Smart Recruitment System</title>
-    <!-- Google Fonts (Poppins) & Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts (Sora & Inter) & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #4f46e5, #06b6d4);
-            --bg-color: #ffffff;
-            --section-bg: #f8fafc;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+            --navy: #0B1F44;
+            --blue: #2554E8;
+            --blue-light: #4F86F7;
+            --blue-tint: #EAF0FF;
+            --white: #FFFFFF;
+            --background: #F4F6FB;
+            --text-main: #0F172A;
+            --text-muted: #4A5568;
+            --border-color: #E2E8F0;
             
-            /* Status Colors */
-            --status-pending: #eab308;
-            --status-pending-bg: #fef9c3;
-            --status-shortlisted: #22c55e;
-            --status-shortlisted-bg: #dcfce7;
-            --status-rejected: #ef4444;
-            --status-rejected-bg: #fee2e2;
-            --status-ml: #3b82f6;
-            --status-ml-bg: #dbeafe;
-            --status-none: #94a3b8;
-            --status-none-bg: #f1f5f9;
+            /* High-End Status Colors */
+            --status-pending: #D97706;
+            --status-pending-bg: #FEF3C7;
+            --status-shortlisted: #059669;
+            --status-shortlisted-bg: #D1FAE5;
+            --status-rejected: #DC2626;
+            --status-rejected-bg: #FEE2E2;
+            --status-ml: #4F46E5;
+            --status-ml-bg: #EEF2FF;
+            --status-none: #64748B;
+            --status-none-bg: #F1F5F9;
+
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            
+            --shadow: 0 4px 12px rgba(11, 31, 68, 0.04);
+            --shadow-hover: 0 20px 35px rgba(37, 84, 232, 0.12);
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .navbar-brand, .btn-primary {
+            font-family: 'Sora', sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--background);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---- Keyframes for Entrance Animations ---- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.7s var(--transition-smooth) both;
         }
 
         /* Navbar Styling */
         .navbar {
-            background: var(--primary-gradient);
-            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--navy) 0%, #132f63 60%, var(--blue) 100%);
+            padding: 0.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(11, 31, 68, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 800;
             font-size: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: transform 0.3s var(--transition-smooth);
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.03);
+        }
+
+        .navbar-brand i {
+            background: var(--white);
+            color: var(--navy);
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 1.1rem;
         }
 
         .navbar-nav {
             display: flex;
             list-style: none;
-            gap: 1.5rem;
+            gap: 1rem;
             align-items: center;
         }
 
         .nav-link {
-            color: rgba(255, 255, 255, 0.85);
+            color: #C4D4F7;
             text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.25s var(--transition-smooth);
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
         }
 
         .nav-link:hover, .nav-link.active {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            background-color: rgba(255, 255, 255, 0.12);
         }
 
         /* Main Container */
@@ -91,25 +142,44 @@
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
-            padding: 2rem 1.5rem;
+            padding: 3.5rem 1.5rem;
             flex: 1;
         }
 
-        /* Hero Section */
+        /* Hero Header Section */
         .hero {
-            margin-bottom: 2.5rem;
+            margin-bottom: 3.5rem;
+            background: linear-gradient(135deg, var(--navy) 0%, #1a3c75 100%);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            color: var(--white);
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
         }
 
         .hero h1 {
             font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.03em;
         }
 
         .hero p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
+            font-size: 1.1rem;
+            color: #D6E2FA;
+            font-weight: 400;
         }
 
         /* Jinja Block logic for counting variables safely inside pure template code */
@@ -128,67 +198,74 @@
             {% endif %}
         {% endfor %}
 
-        /* Stats Cards */
+        /* Stats Cards Layout */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
         }
 
         .stat-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 1.8rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.4s var(--transition-smooth), box-shadow 0.4s var(--transition-smooth);
         }
 
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
         }
 
         .stat-info h3 {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             color: var(--text-muted);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
         .stat-info p {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-main);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--navy);
+            font-family: 'Sora', sans-serif;
         }
 
         .stat-icon {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 0.75rem;
+            width: 3.8rem;
+            height: 3.8rem;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
         }
 
-        .icon-total { background-color: #f3e8ff; color: #9333ea; }
-        .icon-pending { background-color: #fef9c3; color: #ca8a04; }
-        .icon-shortlisted { background-color: #dcfce7; color: #16a34a; }
-        .icon-rejected { background-color: #fee2e2; color: #dc2626; }
+        .icon-total { background-color: var(--blue-tint); color: var(--blue); }
+        .icon-pending { background-color: #FEF3C7; color: #D97706; }
+        .icon-shortlisted { background-color: #D1FAE5; color: #059669; }
+        .icon-rejected { background-color: #FEE2E2; color: #DC2626; }
 
-        /* Table Card & Responsive Table Styling */
+        /* Table Card & Modern Responsive Table Styling */
         .table-card {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .table-card:hover {
+            box-shadow: 0 12px 24px rgba(11, 31, 68, 0.06);
         }
 
         .table-responsive {
@@ -203,18 +280,18 @@
         }
 
         .app-table th {
-            background-color: var(--section-bg);
-            padding: 1rem 1.5rem;
-            font-weight: 600;
-            font-size: 0.875rem;
+            background-color: #F8FAFC;
+            padding: 1.25rem 1.8rem;
+            font-weight: 700;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
 
         .app-table td {
-            padding: 1.25rem 1.5rem;
+            padding: 1.4rem 1.8rem;
             border-bottom: 1px solid var(--border-color);
             font-size: 0.95rem;
             color: var(--text-main);
@@ -225,90 +302,105 @@
             border-bottom: none;
         }
 
-        .app-table tr:hover {
-            background-color: #f8fafc;
+        .app-table tr {
+            transition: background-color 0.25s;
         }
 
-        /* Badges Base */
+        .app-table tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        /* Status & ML Badges Design */
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: 0.35rem 0.75rem;
-            font-size: 0.85rem;
-            font-weight: 600;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 700;
             border-radius: 2rem;
             text-transform: capitalize;
+            letter-spacing: 0.02em;
         }
 
-        /* Dynamic Status Classes */
+        /* Dynamic Status Badges */
         .badge-pending { background-color: var(--status-pending-bg); color: var(--status-pending); }
         .badge-shortlisted { background-color: var(--status-shortlisted-bg); color: var(--status-shortlisted); }
         .badge-rejected { background-color: var(--status-rejected-bg); color: var(--status-rejected); }
         
-        /* ML Prediction Badge Customizations */
-        .badge-ml { background-color: var(--status-ml-bg); color: var(--status-ml); }
+        /* ML Prediction Badge Details */
+        .badge-ml { 
+            background: linear-gradient(135deg, var(--blue-tint) 0%, #EEF2FF 100%);
+            color: var(--blue); 
+            border: 1px solid rgba(37, 84, 232, 0.15);
+        }
         .badge-none { background-color: var(--status-none-bg); color: var(--status-none); }
 
-        /* Empty State Screen */
+        /* Empty State Screen Styling */
         .empty-state {
             text-align: center;
-            padding: 5rem 2rem;
-            background: white;
-            border-radius: 1rem;
+            padding: 5.5rem 2rem;
+            background: var(--white);
+            border-radius: var(--radius-lg);
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow);
         }
 
         .empty-icon {
-            font-size: 4rem;
-            background: var(--primary-gradient);
+            font-size: 4.5rem;
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         .empty-state h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--text-main);
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: var(--navy);
         }
 
         .empty-state p {
             color: var(--text-muted);
-            max-width: 450px;
-            margin: 0 auto 2rem auto;
-            font-size: 1rem;
-            line-height: 1.5;
+            max-width: 480px;
+            margin: 0 auto 2.2rem auto;
+            font-size: 1.05rem;
+            line-height: 1.6;
         }
 
         .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background: var(--primary-gradient);
+            gap: 0.6rem;
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
             color: white;
             text-decoration: none;
-            padding: 0.75rem 1.75rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(37, 84, 232, 0.2);
+            transition: all 0.3s var(--transition-smooth);
         }
 
         .btn-primary:hover {
-            opacity: 0.95;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 84, 232, 0.3);
         }
 
-        /* Footer Sticking Style */
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Modern Footer Style */
         footer {
-            background-color: var(--section-bg);
-            color: var(--text-muted);
+            background-color: #08152E;
+            color: #94A3B8;
             text-align: center;
-            padding: 1.5rem;
-            font-size: 0.875rem;
-            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             margin-top: auto;
         }
 
@@ -316,8 +408,8 @@
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
+                gap: 1.2rem;
+                padding: 1.2rem;
             }
             .navbar-nav {
                 width: 100%;
@@ -326,10 +418,18 @@
             }
             .nav-link {
                 font-size: 0.85rem;
-                padding: 0.4rem 0.6rem;
+                padding: 0.5rem 0.8rem;
             }
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            .hero {
+                padding: 30px 20px;
+                margin-bottom: 2.5rem;
+            }
+            .hero h1 {
+                font-size: 1.75rem;
             }
         }
 
@@ -344,25 +444,25 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <div class="navbar-brand">
-            <i class="fa-solid to fa-laptop-code"></i> SmartRecruit
-        </div>
+        <a href="#" class="navbar-brand">
+            <i class="fa-solid fa-laptop-code"></i> SmartRecruit ✨
+        </a>
         <ul class="navbar-nav">
-            <li><a href="{{ url_for('candidate_dashboard') }}" class="nav-link">Dashboard</a></li>
-            <li><a href="{{ url_for('browse_jobs') }}" class="nav-link">Browse Jobs</a></li>
-            <li><a href="{{ url_for('my_applications') }}" class="nav-link active">My Applications</a></li>
-           {# <li><a href="{{ url_for('my_profile') }}" class="nav-link">My Profile</a></li>#}
-            {#<li><a href="{{ url_for('logout') }}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>#}
+            <li><a href="{{ url_for('candidate_dashboard') }}" class="nav-link">Dashboard 🏠</a></li>
+            <li><a href="{{ url_for('browse_jobs') }}" class="nav-link">Browse Jobs 🔍</a></li>
+            <li><a href="{{ url_for('my_applications') }}" class="nav-link active">My Applications 📁</a></li>
+            {# <li><a href="{{ url_for('my_profile') }}" class="nav-link">My Profile 👤</a></li>#}
+            {#<li><a href="{{ url_for('logout') }}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout 🚪</a></li>#}
         </ul>
     </nav>
 
     <!-- Main Content Area -->
-    <div class="container">
+    <div class="container animate-fade-in">
         
         <!-- Hero Header -->
         <div class="hero">
-            <h1>My Applications</h1>
-            <p>Track all the jobs you have applied for and monitor your recruitment progress.</p>
+            <h1>My Applications 📁</h1>
+            <p>Track all the jobs you have applied for and monitor your recruitment progress dynamically.</p>
         </div>
 
         {% if applications and applications|length > 0 %}
@@ -415,26 +515,26 @@
                     <tbody>
                         {% for app in applications %}
                         <tr>
-                            <td style="font-weight: 500;">{{ app[0] }}</td>
-                            <td><i class="fa-solid fa-location-dot" style="color: var(--text-muted); margin-right: 0.25rem;"></i> {{ app[1] }}</td>
-                            <td>₹{{ app[2] }}</td>
-                            <td>{{ app[3] }}</td>
+                            <td style="font-weight: 700; color: var(--navy);">{{ app[0] }} ⚡</td>
+                            <td><i class="fa-solid fa-location-dot" style="color: var(--blue-light); margin-right: 0.35rem;"></i> {{ app[1] }}</td>
+                            <td style="font-weight: 600;">₹{{ app[2] }}</td>
+                            <td style="color: var(--text-muted); font-weight: 500;">{{ app[3] }}</td>
                             <td>
                                 {% if app[4]|lower == 'pending' %}
-                                    <span class="badge badge-pending">Pending</span>
+                                    <span class="badge badge-pending">Pending ⏳</span>
                                 {% elif app[4]|lower == 'shortlisted' %}
-                                    <span class="badge badge-shortlisted">Shortlisted</span>
+                                    <span class="badge badge-shortlisted">Shortlisted 🎉</span>
                                 {% elif app[4]|lower == 'rejected' %}
-                                    <span class="badge badge-rejected">Rejected</span>
+                                    <span class="badge badge-rejected">Rejected ❌</span>
                                 {% else %}
                                     <span class="badge badge-none">{{ app[4] }}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if app[5] %}
-                                    <span class="badge badge-ml"><i class="fa-solid fa-brain" style="font-size: 0.75rem; margin-right: 0.35rem;"></i> {{ app[5] }}</span>
+                                    <span class="badge badge-ml"><i class="fa-solid fa-brain" style="font-size: 0.8rem; margin-right: 0.4rem;"></i> {{ app[5] }}</span>
                                 {% else %}
-                                    <span class="badge badge-none">Pending Analysis</span>
+                                    <span class="badge badge-none">Pending Analysis ⚙️</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -449,9 +549,9 @@
         <div class="empty-state">
             <div class="empty-icon"><i class="fa-regular fa-file-lines"></i></div>
             <h2>No Applications Yet</h2>
-            <p>You haven't applied for any jobs yet. Browse available jobs and submit your first application.</p>
+            <p>You haven't submitted applications for any opportunities yet. Explore live job matches tailored to your profile right away!</p>
             <a href="{{ url_for('browse_jobs') }}" class="btn-primary">
-                <i class="fa-solid fa-magnifying-glass"></i> Browse Jobs
+                <i class="fa-solid fa-magnifying-glass"></i> Browse Jobs 🚀
             </a>
         </div>
         {% endif %}
@@ -460,7 +560,7 @@
 
     <!-- Application Footer -->
     <footer>
-        © 2026 Smart Recruitment System | AI Powered Recruitment Platform
+        © 2026 Smart Recruitment System | AI Powered Recruitment Platform ✨
     </footer>
 
 </body>

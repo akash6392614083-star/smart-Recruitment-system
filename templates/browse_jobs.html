@@ -9,19 +9,26 @@
     <!-- Google Fonts for modern typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --background: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --navy: #0B1F44;
+            --blue: #2554E8;
+            --blue-light: #4F86F7;
+            --blue-tint: #EAF0FF;
+            --white: #FFFFFF;
+            --background: #F4F6FB;
+            --text-main: #0F172A;
+            --text-muted: #4A5568;
+            --border: #E2E8F0;
+            
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            
+            --shadow: 0 4px 12px rgba(11, 31, 68, 0.04);
+            --shadow-hover: 0 20px 35px rgba(37, 84, 232, 0.12);
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
@@ -35,23 +42,44 @@
             background-color: var(--background);
             color: var(--text-main);
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .nav-logo, .apply-btn {
+            font-family: 'Sora', sans-serif;
+        }
+
+        /* ---- Keyframes for Entrance Animations ---- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.7s var(--transition-smooth) both;
         }
 
         /* Top Navigation Bar */
         .navbar {
-            background-color: var(--surface);
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--navy) 0%, #132f63 60%, var(--blue) 100%);
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            box-shadow: 0 4px 20px rgba(11, 31, 68, 0.15);
+            padding: 0.5rem 0;
         }
 
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
-            height: 70px;
+            height: 72px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -59,68 +87,100 @@
 
         .nav-logo {
             font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-weight: 800;
+            color: var(--white);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            transition: transform 0.3s var(--transition-smooth);
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.03);
+        }
+
+        .nav-logo i {
+            background: var(--white);
+            color: var(--navy);
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 1.1rem;
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             list-style: none;
             align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            transition: all 0.2s ease;
+            color: #C4D4F7;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            transition: all 0.25s var(--transition-smooth);
         }
 
         .nav-links a:hover, .nav-links a.active {
-            color: var(--primary);
-            background-color: #f1f5f9;
+            color: var(--white);
+            background-color: rgba(255, 255, 255, 0.12);
         }
 
         .nav-links a.logout-btn {
-            color: #ef4444;
+            color: #FF8F8F;
         }
 
         .nav-links a.logout-btn:hover {
-            background-color: #fef2f2;
+            background-color: rgba(255, 77, 77, 0.15);
+            color: #FF4D4D;
         }
 
         /* Main Content Layout */
         .main-container {
             max-width: 1200px;
-            margin: 3rem auto;
+            margin: 3.5rem auto;
             padding: 0 2rem;
         }
 
         /* Page Heading & Header */
         .page-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
+            background: linear-gradient(135deg, var(--navy) 0%, #1a3c75 100%);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            color: var(--white);
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::after {
+            content: "";
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
         }
 
         .page-title {
             font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.03em;
         }
 
         .page-subtitle {
             font-size: 1.1rem;
-            color: var(--text-muted);
+            color: #D6E2FA;
+            font-weight: 400;
         }
 
         /* Modern Grid Layout for Job Cards */
@@ -132,82 +192,89 @@
 
         /* Custom Card Element */
         .job-card {
-            background-color: var(--surface);
+            background-color: var(--white);
             border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 2rem;
+            border-radius: var(--radius-lg);
+            padding: 2.2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: var(--shadow);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.4s var(--transition-smooth), box-shadow 0.4s var(--transition-smooth), border-color 0.3s;
             position: relative;
             overflow: hidden;
         }
 
         .job-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-hover);
-            border-color: #cbd5e1;
+            border-color: rgba(37, 84, 232, 0.25);
         }
 
         /* Card Header Elements */
         .job-header {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .job-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 0.25rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.02em;
         }
 
         .company-name {
-            font-size: 0.95rem;
-            color: var(--primary);
-            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--blue);
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background: var(--blue-tint);
+            padding: 6px 12px;
+            border-radius: 8px;
+            width: fit-content;
         }
 
         /* Meta Data & Details Elements */
         .job-details {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1.25rem;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
             border-bottom: 1px dashed var(--border);
         }
 
         .detail-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.87rem;
+            gap: 0.6rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
+            font-weight: 550;
         }
 
         .detail-item i {
-            color: #94a3b8;
-            width: 16px;
+            color: var(--blue-light);
+            font-size: 1rem;
+            width: 20px;
             text-align: center;
         }
 
         /* Tagging Layout for Skills */
         .skills-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         .skills-label {
             font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #94A3B8;
+            margin-bottom: 0.7rem;
+            font-weight: 700;
         }
 
         .skills-tags {
@@ -217,35 +284,44 @@
         }
 
         .skill-tag {
-            background-color: #f1f5f9;
-            color: #475569;
+            background-color: var(--background);
+            color: var(--navy);
             font-size: 0.75rem;
-            font-weight: 500;
-            padding: 0.25rem 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.85rem;
             border-radius: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.25s;
+        }
+
+        .job-card:hover .skill-tag {
+            border-color: var(--blue-tint);
+            background-color: var(--blue-tint);
+            color: var(--blue);
         }
 
         /* Action Buttons */
         .apply-btn {
             display: block;
             text-align: center;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
             color: #ffffff;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.95rem;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 2px 4px 0 rgba(79, 70, 229, 0.15);
+            padding: 0.85rem;
+            border-radius: 12px;
+            transition: all 0.3s var(--transition-smooth);
+            box-shadow: 0 4px 15px rgba(37, 84, 232, 0.2);
         }
 
         .apply-btn:hover {
-            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 84, 232, 0.3);
         }
 
         .apply-btn:active {
-            transform: scale(0.98);
+            transform: translateY(0) scale(0.98);
         }
 
         /* Responsive Mobile Styles */
@@ -253,16 +329,20 @@
             .nav-container {
                 flex-direction: column;
                 height: auto;
-                padding: 1rem;
-                gap: 1rem;
+                padding: 1.2rem;
+                gap: 1.2rem;
             }
             .nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 0.75rem;
+                gap: 0.5rem;
             }
             .jobs-grid {
                 grid-template-columns: 1fr;
+            }
+            .page-header {
+                padding: 30px 20px;
+                margin-bottom: 2.5rem;
             }
             .page-title {
                 font-size: 1.75rem;
@@ -275,18 +355,18 @@
   <nav class="navbar">
     <div class="nav-container">
         <a href="#" class="nav-logo">
-            <i class="fa-solid fa-graduation-cap"></i> SmartRecruit
+            <i class="fa-solid fa-graduation-cap"></i> SmartRecruit ✨
         </a>
 
         <ul class="nav-links">
-            <li><a href="{{ url_for('candidate_dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('browse_jobs') }}" class="active">Browse Jobs</a></li>
-           {# <li><a href="{{ url_for('my_applications') }}">My Applications</a></li>#}
-            {#<li><a href="{{ url_for('my_profile') }}">My Profile</a></li>#}
+            <li><a href="{{ url_for('candidate_dashboard') }}">Dashboard 🏠</a></li>
+            <li><a href="{{ url_for('browse_jobs') }}" class="active">Browse Jobs 🔍</a></li>
+            {# <li><a href="{{ url_for('my_applications') }}">My Applications 📁</a></li>#}
+            {#<li><a href="{{ url_for('my_profile') }}">My Profile 👤</a></li>#}
         {#
             <li>
                 <a href="{{ url_for('logout') }}" class="logout-btn">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout 🚪
                 </a>
             </li>
         #}
@@ -295,12 +375,12 @@
    </nav>
 
     <!-- Main Content Body Area -->
-    <main class="main-container">
+    <main class="main-container animate-fade-in">
         
         <!-- Headers Section -->
         <header class="page-header">
-            <h1 class="page-title">Find Your Dream Job</h1>
-            <p class="page-subtitle">Explore available opportunities matched to your profile</p>
+            <h1 class="page-title">Find Your Dream Job 🎯</h1>
+            <p class="page-subtitle">Explore open career opportunities matched to your professional profile</p>
         </header>
 
         <!-- Dynamic Responsive Grid for MySQL Jobs -->
@@ -310,7 +390,7 @@
                 <div>
                     <!-- Job & Company Identification info -->
                     <div class="job-header">
-                        <h2 class="job-title">{{ job[1] }}</h2>
+                        <h2 class="job-title">{{ job[1] }} ⚡</h2>
                         <div class="company-name">
                             <i class="fa-solid fa-building"></i> Smart Recruitment System
                         </div>
@@ -320,25 +400,25 @@
                     <div class="job-details">
                         <div class="detail-item" title="Location">
                             <i class="fa-solid fa-location-dot"></i>
-                            <span>{{ job[2] }}</span>
+                            <span>{{ job[2] }} 📍</span>
                         </div>
                         <div class="detail-item" title="Salary">
                             <i class="fa-solid fa-wallet"></i>
-                            <span>{{ job[3] }}</span>
+                            <span>₹{{ job[3] }} 💸</span>
                         </div>
                         <div class="detail-item" title="Minimum CGPA">
                             <i class="fa-solid fa-star"></i>
-                            <span>Min CGPA: {{ job[5] }}</span>
+                            <span>Min CGPA: {{ job[5] }} ⭐</span>
                         </div>
                         <div class="detail-item" title="Last Date to Apply">
                             <i class="fa-solid fa-calendar-days"></i>
-                            <span>Deadline: {{ job[6] }}</span>
+                            <span>Deadline: {{ job[6] }} ⏳</span>
                         </div>
                     </div>
 
                     <!-- Required Skills display mapping -->
                     <div class="skills-section">
-                        <div class="skills-label">Required Skills</div>
+                        <div class="skills-label">Required Skills 🛠️</div>
                         <div class="skills-tags">
                             <!-- Converts string to lists split by spaces or commas -->
                             {% for skill in job[4].replace(',', ' ').split() %}
@@ -350,7 +430,7 @@
 
                 <!-- Flask Action Route Target Button Component -->
                 <a href="{{ url_for('apply_job', job_id=job[0]) }}" class="apply-btn">
-                    Apply Now
+                    Apply Now 🚀
                 </a>
             </article>
             {% endfor %}

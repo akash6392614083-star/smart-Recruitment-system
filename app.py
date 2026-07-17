@@ -574,6 +574,40 @@ def ai_shortlisting():
     # flash("AI Shortlisting completed successfully!")
 
     return redirect(url_for("my_jobs"))
+@app.route("/shortlist/<int:application_id>/<int:job_id>")
+def shortlist_candidate(application_id, job_id):
+
+    if "user_id" not in session:
+        return redirect(url_for("recruiter"))
+
+    cursor.execute("""
+        UPDATE application
+        SET status='shortlisted'
+        WHERE application_id=%s
+    """, (application_id,))
+
+    db.commit()
+
+    # flash("Candidate shortlisted successfully!", "success")
+
+    return redirect(url_for("view_applicants", job_id=job_id))
+@app.route("/reject/<int:application_id>/<int:job_id>")
+def reject_candidate(application_id, job_id):
+
+    if "user_id" not in session:
+        return redirect(url_for("recruiter"))
+
+    cursor.execute("""
+        UPDATE application
+        SET status='rejected'
+        WHERE application_id=%s
+    """, (application_id,))
+
+    db.commit()
+
+    # flash("Candidate rejected successfully!", "success")
+
+    return redirect(url_for("view_applicants", job_id=job_id))
 
 
 

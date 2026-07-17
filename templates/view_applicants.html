@@ -212,22 +212,23 @@
 
                         </td>
 
-                        <td>
+                                <td>
 
-                        <button class="btn">
-                        <i class="fa-solid fa-eye"></i>
-                        </button>
+                <button class="btn">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
 
-                        <button class="btn btn-primary">
-                        Shortlist
-                        </button>
+                <a href="{{ url_for('shortlist_candidate', application_id=applicant[0], job_id=job_id) }}"
+                class="btn btn-primary">
+                    Shortlist
+                </a>
 
-                        <button class="btn">
-                        Reject
-                        </button>
+                <a href="{{ url_for('reject_candidate', application_id=applicant[0], job_id=job_id) }}"
+                class="btn btn-danger">
+                    Reject
+                </a>
 
-                        </td>
-
+            </td>
                         </tr>
 
                         {% endfor %}
