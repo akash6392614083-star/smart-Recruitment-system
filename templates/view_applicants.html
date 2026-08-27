@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Applicants | SmartRecruit System</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); font-size: 14px; }
+
+        /* Layout */
+        .app-wrapper { display: flex; min-height: 100vh; }
+        
+        /* Navbar */
+        .navbar { 
+            position: fixed; top: 0; left: 0; right: 0; height: 65px; 
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: 1000;
+        }
+        .logo { font-weight: 700; color: var(--primary); font-size: 20px; display: flex; align-items: center; gap: 8px; }
+        
+        /* Sidebar */
+        .sidebar { 
+            width: 260px; padding-top: 80px; background: var(--surface); 
+            border-right: 1px solid var(--border); height: 100vh; position: fixed;
+        }
+        .nav-item { 
+            padding: 12px 24px; display: flex; align-items: center; gap: 12px;
+            color: var(--text-muted); text-decoration: none; transition: 0.2s;
+        }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); border-right: 3px solid var(--primary); }
+        .nav-item:hover { background: var(--bg); }
+
+        /* Main Content */
+        .main-content { margin-left: 260px; padding: 100px 32px 32px; flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+
+        /* Header & Controls */
+        .header-section { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; }
+        .controls { display: flex; gap: 12px; }
+        .search-box { padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius); width: 250px; }
+        
+        /* Stats Cards */
+        .stats-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .card { 
+            background: var(--surface); padding: 20px; border-radius: var(--radius);
+            box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        .card h3 { font-size: 24px; margin-bottom: 4px; }
+        .card p { color: var(--text-muted); font-size: 13px; }
+
+        /* Table Section */
+        .table-section { grid-column: 1 / 1; background: var(--surface); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        th { text-align: left; padding: 12px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; border-bottom: 2px solid var(--bg); }
+        td { padding: 16px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        /* UI Elements */
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #ddd; object-fit: cover; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .btn { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; background: white; font-size: 12px; }
+        .btn-primary { background: var(--primary); color: white; border: none; }
+        
+        /* Status/Pred Badges */
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-shortlisted { background: #dcfce7; color: #166534; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+
+        /* Right Panel */
+        .right-panel { background: var(--surface); padding: 20px; border-radius: var(--radius); height: fit-content; border: 1px solid var(--border); }
+        .widget-item { margin-bottom: 20px; }
+        .widget-item h4 { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+
+        /* Empty State */
+        .empty-state { display: none; text-align: center; padding: 60px; grid-column: 1 / -1; }
+        .empty-state i { font-size: 48px; color: var(--border); margin-bottom: 16px; }
+
+        @media (max-width: 1200px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="logo"><i class="fa-solid fa-bolt"></i> SmartRecruit</div>
+        <div style="font-weight: 600;">Applicants</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <i class="fa-regular fa-bell"></i>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="https://i.pravatar.cc/40" class="avatar" alt="User">
+                <span>John Doe</span>
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#" class="nav-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-plus"></i> Post Job</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-briefcase"></i> My Jobs</a>
+        <a href="#" class="nav-item active"><i class="fa-solid fa-users"></i> Applicants</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Shortlisting</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-calendar"></i> Interviews</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-building"></i> Company Profile</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+    </aside>
+
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header-section">
+            <div>
+                <h1>Applicants for this Job</h1>
+                <p style="color: var(--text-muted);">Manage all applications received for this position.</p>
+            </div>
+            <div class="controls">
+                <input type="text" class="search-box" placeholder="Search Candidate...">
+                <select class="btn"><option>Filter Status</option></select>
+                <select class="btn"><option>Filter Prediction</option></select>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <section class="stats-grid">
+            <div class="card"><h3>148</h3><p>Total Applicants</p></div>
+            <div class="card"><h3>42</h3><p>Shortlisted</p></div>
+            <div class="card"><h3>98</h3><p>Pending</p></div>
+            <div class="card"><h3>8</h3><p>Rejected</p></div>
+        </section>
+
+        <!-- Table -->
+        <section class="table-section" id="applicantsTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Profile</th><th>Email</th><th>CGPA</th><th>Aptitude</th><th>Comm</th><th>Skills</th><th>Projects</th><th>Intern</th><th>Resume</th><th>Prediction</th><th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                        {% for applicant in applicants %}
+
+                        <tr>
+
+                        <td>
+                            <strong>{{ applicant[1] }}</strong>
+                        </td>
+
+                        <td>{{ applicant[2] }}</td>
+
+                        <td>{{ applicant[4] }}</td>
+
+                        <td>{{ applicant[5] }}</td>
+
+                        <td>{{ applicant[6] }}</td>
+
+                        <td>{{ applicant[7] }}</td>
+
+                        <td>{{ applicant[9] }}</td>
+
+                        <td>{{ applicant[8] }}</td>
+
+                        <td>
+                            Resume
+                        </td>
+
+                        <td>
+                        {% if applicant[11] == "Shortlisted" %}
+
+                            <span class="badge status-shortlisted">
+                                {{ applicant[11] }}
+                            </span>
+
+                        {% elif applicant[11] == "Not Shortlisted" %}
+
+                            <span class="badge status-rejected">
+                                {{ applicant[11] }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge status-pending">
+                                Pending
+                            </span>
+
+                        {% endif %}
+                    </td>
+                        <td>
+
+                        <span class="badge status-pending">
+                        {{ applicant[10] }}
+                        </span>
+
+                        </td>
+
+                                <td>
+
+                <button class="btn">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+
+                <a href="{{ url_for('shortlist_candidate', application_id=applicant[0], job_id=job_id) }}"
+                class="btn btn-primary">
+                    Shortlist
+                </a>
+
+                <a href="{{ url_for('reject_candidate', application_id=applicant[0], job_id=job_id) }}"
+                class="btn btn-danger">
+                    Reject
+                </a>
+
+            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+            </table>
+        </section>
+
+        <!-- Right Panel -->
+        <aside class="right-panel">
+            <h3 style="margin-bottom: 20px;">Insights</h3>
+            <div class="widget-item">
+                <h4>Recent Activity</h4>
+                <p>New applicant: Alex Johnson</p>
+            </div>
+            <div class="widget-item">
+                <h4>Top Candidate</h4>
+                <p>Jane Doe (Prediction: 95%)</p>
+            </div>
+            <div class="widget-item">
+                <h4>Average CGPA</h4>
+                <p>3.5 / 4.0</p>
+            </div>
+            <div class="widget-item">
+                <h4>Skill Score</h4>
+                <p>88% Average</p>
+            </div>
+        </aside>
+
+        <!-- Empty State (Hidden by default) -->
+        <section class="empty-state" id="emptyState">
+            <i class="fa-solid fa-folder-open"></i>
+            <h2>No Applicants Yet</h2>
+            <p>Your job posting is active, but no one has applied yet.</p>
+        </section>
+    </main>
+
+    <script>
+        // JS Logic to toggle empty state for demonstration
+        function toggleEmptyState() {
+            const table = document.getElementById('applicantsTable');
+            const empty = document.getElementById('emptyState');
+            if(table.style.display === 'none') {
+                table.style.display = 'block';
+                empty.style.display = 'none';
+            } else {
+                table.style.display = 'none';
+                empty.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

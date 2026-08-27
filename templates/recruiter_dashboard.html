@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard - Smart Recruit</title>
+    
+    <!-- Google Fonts (Poppins) & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            /* Theme Color Palette */
+            --primary-gradient: linear-gradient(135deg, #0b2545, #10847e);
+            --sidebar-gradient: linear-gradient(180deg, #0b2545, #134074);
+            --bg-color: #f2f6f8;
+            --card-bg: #ffffff;
+            --text-main: #14213d;
+            --text-muted: #5c6b80;
+            --border-color: #e3e9f0;
+
+            /* Accent & Badge Colors */
+            --accent-gold: #e3a438;
+            --accent-teal: #10847e;
+            --accent-wine: #8c2f3b;
+            --success-color: #16a34a;
+            --success-bg: #dcfce7;
+            --warning-color: #ca8a04;
+            --warning-bg: #fef9c3;
+            --danger-color: #dc2626;
+            --danger-bg: #fee2e2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ---------- Keyframe Animations ---------- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ---------- Sidebar ---------- */
+        .sidebar {
+            width: 270px;
+            height: 100vh;
+            background: var(--sidebar-gradient);
+            position: fixed;
+            left: 0;
+            top: 0;
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(11, 37, 69, 0.15);
+            z-index: 100;
+            animation: fadeInLeft 0.5s ease both;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #ffffff, #e3a438);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 12px 18px;
+            margin: 8px 0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: translateX(5px);
+            box-shadow: inset 3px 0 0 var(--accent-gold);
+        }
+
+        /* ---------- Main Page Layout ---------- */
+        .main {
+            margin-left: 270px;
+            width: calc(100% - 270px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ---------- Navbar ---------- */
+        .navbar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            animation: fadeInDown 0.5s ease both;
+        }
+
+        .navbar h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-bell {
+            position: relative;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .notification-bell:hover {
+            color: var(--accent-teal);
+        }
+
+        .bell-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger-color);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .profile-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-color);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ---------- Content Container ---------- */
+        .content {
+            padding: 40px;
+            animation: fadeInUp 0.6s ease both;
+            animation-delay: 0.1s;
+        }
+
+        .content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        /* ---------- Stat Cards Grid ---------- */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 10px;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px -5px rgba(11, 37, 69, 0.15);
+            border-color: rgba(16, 132, 126, 0.3);
+        }
+
+        .card i {
+            font-size: 2.2rem;
+            color: var(--accent-teal);
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 5px 0;
+            color: var(--text-main);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* ---------- Fast Action Buttons ---------- */
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .action-btn {
+            background: white;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            padding: 16px;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.02);
+            transition: all 0.25s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(11, 37, 69, 0.2);
+        }
+
+        /* ---------- Tables & Data Sections ---------- */
+        .section-title {
+            margin-top: 45px;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #fafbfc;
+            color: var(--text-muted);
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1.5px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 20px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background-color: var(--warning-bg);
+            color: var(--warning-color);
+        }
+
+        .status-closed {
+            background-color: var(--danger-bg);
+            color: var(--danger-color);
+        }
+
+        .score-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        /* Action Buttons */
+        .btn-view {
+            padding: 6px 14px;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--accent-teal);
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-view:hover {
+            background: var(--accent-teal);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-1px);
+        }
+
+        /* ---------- Responsive Media Queries ---------- */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 20px 10px;
+            }
+            .sidebar h2 span {
+                display: none;
+            }
+            .sidebar a span {
+                display: none;
+            }
+            .sidebar a {
+                justify-content: center;
+                padding: 12px;
+            }
+            .main {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .cards, .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2><i class="fas fa-robot"></i> <span>Smart Recruit</span></h2>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+            
+            <a href="{{ url_for('post_job') }}">
+                <i class="fas fa-plus-circle"></i> <span>Post Job</span>
+            </a>
+            
+            <a href="{{ url_for('my_jobs') }}">
+                <i class="fas fa-briefcase"></i> <span>My Jobs</span>
+            </a>
+            
+            <a href="#"><i class="fas fa-users"></i> <span>Applicants</span></a>
+            
+            <a href="{{ url_for('ai_shortlisting') }}">
+                <i class="fas fa-robot"></i> <span>AI Shortlisting</span>
+            </a>
+            
+            <a href="#"><i class="fas fa-calendar"></i> <span>Interviews</span></a>
+            
+            <a href="#"><i class="fas fa-building"></i> <span>Company Profile</span></a>
+            
+            <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>
+            
+            <a href="/" style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="main">
+
+        <!-- Top Navigation Bar -->
+        <div class="navbar">
+            <h2>👋 Recruiter Dashboard</h2>
+            <div class="profile">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="bell-dot"></span>
+                </div>
+                <div class="profile-user">
+                    <i class="fas fa-user-tie" style="color: var(--accent-teal);"></i>
+                    <span>Welcome, Recruiter ✨</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="content">
+
+            <h2>📊 Dashboard Overview</h2>
+
+            <!-- Summary Cards -->
+            <div class="cards">
+                <div class="card">
+                    <i class="fas fa-briefcase" style="color: var(--accent-teal);"></i>
+                    <h2>12</h2>
+                    <p>💼 Total Jobs</p>
+                </div>
+
+                <div class="card">
+                    <i class="fas fa-users" style="color: var(--accent-gold);"></i>
+                    <h2>85</h2>
+                    <p>📩 Applications</p>
+                </div>
+
+                <div class="card">
+                    <i class="fas fa-user-check" style="color: var(--success-color);"></i>
+                    <h2>23</h2>
+                    <p>✔️ Shortlisted</p>
+                </div>
+
+                <div class="card">
+                    <i class="fas fa-calendar-check" style="color: var(--accent-wine);"></i>
+                    <h2>5</h2>
+                    <p>🗓️ Scheduled Interviews</p>
+                </div>
+            </div>
+
+            <!-- Fast Action Grid -->
+            <div class="actions">
+                <a href="{{ url_for('post_job') }}" class="action-btn">✨ ➕ Post Job</a>
+                <a href="{{ url_for('my_jobs') }}" class="action-btn">📁 📋 My Jobs</a>
+                <a href="#" class="action-btn">👥 Applicants</a>
+                <a href="{{ url_for('ai_shortlisting') }}" class="action-btn">🤖 AI Shortlist</a>
+            </div>
+
+            <!-- Recent Job Posts Table -->
+            <h2 class="section-title">📂 Recent Job Posts</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Applications</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Python Developer</strong></td>
+                            <td>24</td>
+                            <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                            <td><button class="btn-view"><i class="fas fa-eye"></i> View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Analyst</strong></td>
+                            <td>18</td>
+                            <td><span class="status-badge status-active"><i class="fa-solid fa-circle"></i> Active</span></td>
+                            <td><button class="btn-view"><i class="fas fa-eye"></i> View</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ML Engineer</strong></td>
+                            <td>11</td>
+                            <td><span class="status-badge status-closed"><i class="fa-solid fa-circle-xmark"></i> Closed</span></td>
+                            <td><button class="btn-view"><i class="fas fa-eye"></i> View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recent Applications Table -->
+            <h2 class="section-title">🎯 Recent Applications</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Job</th>
+                            <th>Match Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Akash Sharma</strong></td>
+                            <td>Python Developer</td>
+                            <td><span class="score-badge">🔥 91%</span></td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rahul Singh</strong></td>
+                            <td>ML Engineer</td>
+                            <td><span class="score-badge">🚀 85%</span></td>
+                            <td><span class="status-badge status-active">Shortlisted</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Priya Verma</strong></td>
+                            <td>Data Analyst</td>
+                            <td><span class="score-badge">⚡ 78%</span></td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

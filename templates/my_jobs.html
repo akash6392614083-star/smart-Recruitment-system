@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posted Jobs | SmartRecruit Dashboard</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 260px;
+            --navbar-height: 70px;
+            
+            /* Status Colors */
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            
+            /* Shadows & Effects */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            --glass: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- FIXED TOP NAVIGATION --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--navbar-height);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+        }
+
+        .nav-left .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-icon-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .nav-icon-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-icon-btn .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border);
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        .profile-info {
+            line-height: 1.3;
+        }
+
+        .profile-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .profile-company {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .logout-icon-btn {
+            color: var(--text-muted);
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .logout-icon-btn:hover {
+            color: var(--danger);
+            background: var(--danger-light);
+        }
+
+        /* --- FIXED LEFT SIDEBAR --- */
+        .sidebar {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 90;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-link i {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .menu-link:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .menu-item.active .menu-link {
+            background: var(--primary);
+            color: var(--surface);
+        }
+
+        /* --- MAIN CONTENT LAYOUT --- */
+        .main-wrapper {
+            margin-top: var(--navbar-height);
+            margin-left: var(--sidebar-width);
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 32px;
+            min-height: calc(100vh - var(--navbar-height));
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* --- PAGE HEADER --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        /* --- BUTTONS & INTERACTIVES --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        /* --- STATISTICS CARDS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(37, 99, 235, 0.2);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-card:nth-child(1) .stat-icon { background: #eff6ff; color: #2563eb; }
+        .stat-card:nth-child(2) .stat-icon { background: #ecfdf5; color: #10b981; }
+        .stat-card:nth-child(3) .stat-icon { background: #fef2f2; color: #ef4444; }
+        .stat-card:nth-child(4) .stat-icon { background: #fffbeb; color: #f59e0b; }
+
+        .stat-info .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .stat-info .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* --- SEARCH AND FILTERS --- */
+        .filter-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+            min-width: 240px;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-main);
+            background-color: var(--surface);
+            outline: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        /* --- GLASSMORPHISM TABLE CONTAINER --- */
+        .table-container {
+            background: var(--glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .jobs-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .jobs-table th {
+            background: rgba(241, 245, 249, 0.6);
+            padding: 16px 20px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+        }
+
+        .jobs-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .jobs-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .jobs-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .jobs-table tbody tr:hover {
+            background-color: rgba(248, 250, 252, 0.8);
+        }
+
+        .job-title-cell {
+            font-weight: 600;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .job-dept-cell {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 220px;
+        }
+
+        .skill-badge {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.active { background: var(--success-light); color: var(--success); }
+        .status-badge.closed { background: var(--danger-light); color: var(--danger); }
+        .status-badge.expiring { background: var(--warning-light); color: var(--warning); }
+
+        /* Action Buttons */
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .action-btn.btn-delete:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: var(--danger-light);
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            display: none; /* Controlled via template state toggler */
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .empty-state-illustration {
+            font-size: 64px;
+            color: var(--text-muted);
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        /* --- RIGHT ACTIVITY PANEL --- */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .panel-widget {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .widget-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .activity-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .activity-item.deadline .activity-icon {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .activity-desc {
+            line-height: 1.4;
+        }
+
+        .activity-desc strong {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .activity-time {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 16px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        /* Development Demo Trigger - To toggle view states seamlessly */
+        .demo-toggle-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: var(--text-main);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .demo-toggle-container:hover { opacity: 1; }
+        .demo-toggle-container input { cursor: pointer; }
+
+        /* --- RESPONSIVENESS (BREAKPOINTS) --- */
+        @media (max-width: 1200px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .main-wrapper {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .mobile-menu-btn {
+                display: block !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .page-header .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-main);
+            cursor: pointer;
+            margin-right: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- --- TOP NAVIGATION BAR --- -->
+    <nav class="navbar">
+        <div class="nav-left" style="display: flex; align-items: center;">
+            <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <a href="#" class="logo">
+                <i class="fa-solid fa-bolt-lightning"></i> SmartRecruit
+            </a>
+        </div>
+        <div class="nav-right">
+            <button class="nav-icon-btn" title="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <div class="badge"></div>
+            </button>
+            <div class="profile-card">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&width=120&auto=format&fit=crop" alt="Recruiter Avatar" class="profile-img">
+                <div class="profile-info">
+                    <div class="profile-name">Sarah Jenkins</div>
+                    <div class="profile-company">Acme Tech Corp</div>
+                </div>
+            </div>
+            <button class="logout-icon-btn" title="Logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- --- LEFT SIDEBAR --- -->
+<aside class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+
+        <li class="menu-item">
+            <a href="{{ url_for('recruiter_dashboard') }}" class="menu-link">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="{{ url_for('post_job') }}" class="menu-link">
+                <i class="fa-solid fa-circle-plus"></i> Post Job
+            </a>
+        </li>
+
+        <li class="menu-item active">
+            <a href="{{ url_for('my_jobs') }}" class="menu-link">
+                <i class="fa-solid fa-briefcase"></i> My Jobs
+            </a>
+        </li>
+
+       
+
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Shortlisting
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <i class="fa-solid fa-calendar-days"></i> Interviews
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <i class="fa-solid fa-building"></i> Company Profile
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="#" class="menu-link">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </li>
+
+    </ul>
+
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="{{ url_for('home') }}" class="menu-link" style="color: var(--danger);">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </li>
+    </ul>
+</aside>
+
+    <!-- --- MAIN ENGINE HUB LAYOUT --- -->
+    <div class="main-wrapper">
+        
+        <!-- Primary Working Sector -->
+        <div class="content-area">
+            
+            <!-- Page Header Container -->
+            <div class="page-header">
+                <div class="header-title">
+                    <h1>My Posted Jobs</h1>
+                    <p>Manage, edit, and monitor all jobs posted by your company.</p>
+                </div>
+                <button class="btn btn-gradient">
+                    <i class="fa-solid fa-plus"></i> Post New Job
+                </button>
+            </div>
+
+            <!-- Statistics Cards Section -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Total Jobs Posted</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Active Jobs</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Closed Jobs</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-user-group"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">148</div>
+                        <div class="stat-label">Total Applicants</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Controls & Filter Segment -->
+            <div class="filter-bar">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" id="tableSearch" placeholder="Search by job title or keyword..." onkeyup="filterJobsTable()">
+                </div>
+                <select class="filter-select" id="statusFilter" onchange="filterJobsTable()">
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="expiring soon">Expiring Soon</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <select class="filter-select" id="sortFilter" onchange="sortJobsTable()">
+                    <option value="newest">Sort by: Newest</option>
+                    <option value="oldest">Sort by: Oldest</option>
+                    <option value="applicants">Sort by: Applicants</option>
+                </select>
+            </div>
+
+            <!-- Glassmorphism Main Display Table Frame -->
+            <div class="table-container" id="tableContainer">
+                <table class="jobs-table" id="jobsTable">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Location</th>
+                            <th>Required Skills</th>
+                            <th>Salary</th>
+                            <th style="text-align: center;">Applications</th>
+                            <th>Last Date</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for job in jobs %}
+
+                    <tr>
+
+                    <td>
+                        <span class="job-title-cell">{{ job[1] }}</span>
+                        <span class="job-dept-cell">Posted Job</span>
+                    </td>
+
+                    <td>
+                        <i class="fa-solid fa-location-dot"></i>
+                        {{ job[2] }}
+                    </td>
+
+                    <td>
+                        <div class="skills-container">
+                            <span class="skill-badge">Database</span>
+                        </div>
+                    </td>
+
+                    <td>₹{{ job[3] }}</td>
+
+                    <td style="text-align:center;">
+                    0
+                    </td>
+
+                    <td>{{ job[4] }}</td>
+
+                    <td>
+                    <span class="status-badge active">
+                    <i class="fa-solid fa-circle"></i>
+                    Active
+                    </span>
+                    </td>
+
+                    <td class="actions-cell">
+
+                    <a href="{{ url_for('view_applicants', job_id=job[0]) }}" class="action-btn">
+                           <i class="fa-solid fa-users"></i>
+                    </a>
+
+                    <button class="action-btn">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+
+                    <button class="action-btn btn-delete">
+                    <i class="fa-solid fa-trash-can"></i>
+                    </button>
+
+                    </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+                </table>
+            </div>
+
+            <!-- Clean Screen Empty State Wrapper Component Block -->
+            <div class="empty-state" id="emptyStateContainer">
+                <div class="empty-state-illustration">
+                    <i class="fa-regular fa-folder-open"></i>
+                </div>
+                <h3>No jobs posted yet.</h3>
+                <p>Get started by listing your organization's first open career role path listing.</p>
+                <button class="btn btn-gradient">
+                    <i class="fa-solid fa-plus"></i> Post Your First Job
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Right Side Analytical Feed / Activity Section Panels -->
+        <div class="right-panel">
+            
+            <!-- Contextual Notification Widget Element Block -->
+            <div class="panel-widget">
+                <div class="widget-title">
+                    <i class="fa-solid fa-chart-line" style="color: var(--primary);"></i> Activity Feed
+                </div>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="fa-solid fa-user-plus"></i></div>
+                        <div class="activity-desc">
+                            <strong>New Application Received</strong> for Senior Full Stack Engineer role position.
+                            <span class="activity-time">2 minutes ago</span>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--success-light); color:var(--success);"><i class="fa-solid fa-bullhorn"></i></div>
+                        <div class="activity-desc">
+                            <strong>Job Posted Today</strong>: Python Backend Developer position successfully deployed live.
+                            <span class="activity-time">3 hours ago</span>
+                        </div>
+                    </li>
+                    <li class="activity-item deadline">
+                        <div class="activity-icon"><i class="fa-solid fa-clock"></i></div>
+                        <div class="activity-desc">
+                            <strong>Upcoming Deadline</strong>: Product Designer application cycle concludes within 48 hours.
+                            <span class="activity-time">Tomorrow</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Metric Breakdown Secondary Box Panel Layout Widget -->
+            <div class="panel-widget">
+                <div class="widget-title">
+                    <i class="fa-solid fa-bolt" style="color: var(--warning);"></i> System Insights
+                </div>
+                <div style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                    Your team's AI Shortlist average response processing acceleration mark hit an efficiency rating optimization curve increase of <b>14%</b> over last cycle metrics.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Node Block -->
+        <footer class="footer">
+            Smart Recruitment System &copy; 2026
+        </footer>
+    </div>
+
+    <!-- Interface Testing Interactive Switch HUD Block Element (Dev Testing Asset Overlay Platform) -->
+    <div class="demo-toggle-container">
+        <label for="toggleEmptyState" style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="toggleEmptyState" onchange="toggleViewStatesDemo(this)"> Simulate Empty Dashboard state View
+        </label>
+    </div>
+
+    <!-- --- FRONTEND SCRIPT LOGIC ENGINE CONTROL --- -->
+    <script>
+        // Toggle Mobile Side Menu System Drawer
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // Live Dynamic Filtering Implementation Strategy (Search and Status Multi-Matrix)
+        function filterJobsTable() {
+            const searchQuery = document.getElementById('tableSearch').value.toLowerCase();
+            const statusSelection = document.getElementById('statusFilter').value.toLowerCase();
+            const tableRows = document.querySelectorAll('#tableBody tr');
+            let visibleRowsCount = 0;
+
+            tableRows.forEach(row => {
+                const jobTitleText = row.querySelector('.job-title-cell').innerText.toLowerCase();
+                const departmentText = row.querySelector('.job-dept-cell').innerText.toLowerCase();
+                const skillsText = row.querySelector('.skills-container').innerText.toLowerCase();
+                const statusText = row.querySelector('.status-badge').innerText.toLowerCase();
+
+                const matchesSearch = jobTitleText.includes(searchQuery) || 
+                                      departmentText.includes(searchQuery) || 
+                                      skillsText.includes(searchQuery);
+                                      
+                const matchesStatus = (statusSelection === 'all') || statusText.includes(statusSelection);
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                    visibleRowsCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Handle switching views locally if search yields absolutely empty results arrays matrix structures dynamically
+            const mainContainer = document.getElementById('tableContainer');
+            const emptyState = document.getElementById('emptyStateContainer');
+            
+            if (visibleRowsCount === 0) {
+                mainContainer.style.display = 'none';
+                emptyState.style.display = 'block';
+            } else {
+                if(!document.getElementById('toggleEmptyState').checked) {
+                    mainContainer.style.display = 'block';
+                    emptyState.style.display = 'none';
+                }
+            }
+        }
+
+        // Sorting Operational Architecture Rules Array Execution Block
+        function sortJobsTable() {
+            const criteria = document.getElementById('sortFilter').value;
+            const tableBody = document.getElementById('tableBody');
+            const rowsArray = Array.from(tableBody.querySelectorAll('tr'));
+
+            rowsArray.sort((rowA, rowB) => {
+                if (criteria === 'newest') {
+                    return parseInt(rowB.getAttribute('data-timestamp')) - parseInt(rowA.getAttribute('data-timestamp'));
+                } else if (criteria === 'oldest') {
+                    return parseInt(rowA.getAttribute('data-timestamp')) - parseInt(rowB.getAttribute('data-timestamp'));
+                } else if (criteria === 'applicants') {
+                    return parseInt(rowB.getAttribute('data-applicants')) - parseInt(rowA.getAttribute('data-applicants'));
+                }
+                return 0;
+            });
+
+            // Re-append sorted elements directly to document flow segment structure
+            rowsArray.forEach(row => tableBody.appendChild(row));
+        }
+
+        // Action Functional Operations Logic Call - Delete Row Component Event Trigger
+        function deleteRowElement(actionBtnHandle) {
+            if(confirm('Are you absolutely certain you intend to permanently delete this job post data profile?')) {
+                const rowTarget = actionBtnHandle.closest('tr');
+                rowTarget.style.opacity = '0';
+                rowTarget.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    rowTarget.remove();
+                    filterJobsTable(); // Refresh arrays structures state assessment flags layout tracking matrix
+                }, 300);
+            }
+        }
+
+        // Development Demo Purpose Interactive Framework State Controller Toggle Switch Interface Logic
+        function toggleViewStatesDemo(checkboxElementHandle) {
+            const gridTable = document.getElementById('tableContainer');
+            const zeroStateBox = document.getElementById('emptyStateContainer');
+            
+            if(checkboxElementHandle.checked) {
+                gridTable.style.display = 'none';
+                zeroStateBox.style.display = 'block';
+            } else {
+                gridTable.style.display = 'block';
+                zeroStateBox.style.display = 'none';
+                filterJobsTable();
+            }
+        }
+
+        // Initialize default array sorting execution on execution cycle context thread setup load logic
+        window.addEventListener('DOMContentLoaded', () => {
+            sortJobsTable();
+        });
+    </script>
+</body>
+</html>
