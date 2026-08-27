@@ -20,15 +20,19 @@ def candidate():
 def recruiter():
     return render_template("recruiter.html")
 
+import os
+import mysql.connector
 
-db=mysql.connector.connect(
-    host='127.0.0.1',
-    user="root",
-    password="akash2005",
-    database="smart_recruitment"
-    
-    
+db = mysql.connector.connect(
+    host=os.getenv("DB_HOST"),
+    port=int(os.getenv("DB_PORT", 3306)),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME", "smart_recruitment"),
+    ssl_ca=os.getenv("DB_SSL_CA")
 )
+    
+
 
 cursor=db.cursor()
 @app.route("/candidate/register",methods=['GET','POST'])
